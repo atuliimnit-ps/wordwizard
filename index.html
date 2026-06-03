@@ -18,9 +18,7 @@
     --card-bg: #fffdf8;
     --shadow: rgba(26,18,8,0.12);
   }
-
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--cream);
@@ -28,28 +26,13 @@
     min-height: 100vh;
     overflow-x: hidden;
   }
-
-  /* Noise texture overlay */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.4;
-  }
-
-  /* ── HEADER ── */
   header {
     text-align: center;
     padding: 3rem 1.5rem 2rem;
     position: relative;
     z-index: 1;
   }
-
   .header-eyebrow {
-    font-family: 'DM Sans', sans-serif;
     font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.25em;
@@ -57,7 +40,6 @@
     color: var(--gold);
     margin-bottom: 0.75rem;
   }
-
   h1 {
     font-family: 'Playfair Display', serif;
     font-size: clamp(2.8rem, 8vw, 5rem);
@@ -66,24 +48,18 @@
     color: var(--ink);
     letter-spacing: -0.02em;
   }
-
-  h1 span {
-    color: var(--gold);
-    font-style: italic;
-  }
-
+  h1 span { color: var(--gold); font-style: italic; }
   .header-sub {
     font-size: 0.95rem;
     color: #7a6a55;
     margin-top: 0.75rem;
     font-weight: 300;
-    letter-spacing: 0.02em;
   }
 
-  /* ── API KEY SETUP ── */
+  /* API SETUP */
   .api-setup {
     max-width: 520px;
-    margin: 1.5rem auto 2rem;
+    margin: 1rem auto 2rem;
     padding: 1.5rem;
     background: var(--card-bg);
     border: 1.5px solid #e8dcc8;
@@ -92,47 +68,33 @@
     position: relative;
     z-index: 1;
   }
-
   .api-setup h3 {
     font-family: 'Playfair Display', serif;
     font-size: 1.1rem;
-    margin-bottom: 0.5rem;
-    color: var(--ink);
+    margin-bottom: 0.4rem;
   }
-
   .api-setup p {
     font-size: 0.82rem;
     color: #8a7a65;
-    margin-bottom: 1rem;
+    margin-bottom: 0.9rem;
     line-height: 1.5;
   }
-
-  .api-setup p a {
-    color: var(--gold);
-    text-decoration: none;
-    font-weight: 600;
-  }
-
-  .api-input-row {
-    display: flex;
-    gap: 0.5rem;
-  }
-
+  .api-setup p a { color: var(--gold); font-weight: 600; }
+  .api-input-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
   .api-input-row input {
     flex: 1;
     padding: 0.7rem 1rem;
     border: 1.5px solid #e0d4bc;
     border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.88rem;
+    font-family: monospace;
+    font-size: 0.82rem;
     background: var(--cream);
     color: var(--ink);
     outline: none;
     transition: border-color 0.2s;
+    min-width: 0;
   }
-
   .api-input-row input:focus { border-color: var(--gold); }
-
   .btn-save {
     padding: 0.7rem 1.2rem;
     background: var(--gold);
@@ -146,18 +108,35 @@
     transition: background 0.2s;
     white-space: nowrap;
   }
-
   .btn-save:hover { background: var(--gold-light); }
-
-  .api-status {
-    margin-top: 0.6rem;
+  .btn-test {
+    width: 100%;
+    padding: 0.6rem;
+    background: var(--warm);
+    border: 1.5px solid #e0d4bc;
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    color: #6a4a20;
+    margin-bottom: 0.5rem;
+    transition: background 0.2s;
+  }
+  .btn-test:hover { background: #ecdcc8; }
+  #apiStatus {
     font-size: 0.8rem;
-    font-weight: 500;
-    color: var(--sage);
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    line-height: 1.5;
+    word-break: break-word;
     display: none;
   }
+  #apiStatus.ok { background: #eefff2; color: #2a6a3a; font-weight: 600; }
+  #apiStatus.err { background: #fff0f0; color: #c03030; }
+  #apiStatus.info { background: #fff8ee; color: #7a4a10; }
 
-  /* ── NAV BUTTONS ── */
+  /* NAV */
   .nav-grid {
     display: flex;
     flex-wrap: wrap;
@@ -169,7 +148,6 @@
     max-width: 700px;
     margin: 0 auto;
   }
-
   .nav-btn {
     display: flex;
     flex-direction: column;
@@ -183,60 +161,17 @@
     transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow: 0 2px 12px var(--shadow);
     min-width: 120px;
-    position: relative;
-    overflow: hidden;
     font-family: 'DM Sans', sans-serif;
     text-align: center;
   }
-
-  .nav-btn::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transition: opacity 0.25s;
-  }
-
-  .nav-btn.words::before    { background: linear-gradient(135deg, #fff8ee, #fdefd4); }
-  .nav-btn.quotes::before   { background: linear-gradient(135deg, #eef4ff, #ddeaff); }
-  .nav-btn.phrases::before  { background: linear-gradient(135deg, #eefff2, #d4f5dd); }
-  .nav-btn.idioms::before   { background: linear-gradient(135deg, #fff0ee, #ffd9d4); }
-
   .nav-btn:hover { transform: translateY(-4px) scale(1.04); box-shadow: 0 8px 28px var(--shadow); }
-  .nav-btn:hover::before { opacity: 1; }
   .nav-btn:active { transform: scale(0.97); }
+  .nav-btn.active { border-color: var(--gold); box-shadow: 0 6px 24px rgba(200,146,42,0.25); transform: translateY(-3px); }
+  .nav-icon { font-size: 1.8rem; }
+  .nav-label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink); }
+  .nav-sub { font-size: 0.68rem; color: #9a8a75; font-weight: 400; }
 
-  .nav-btn.active {
-    border-color: var(--gold);
-    box-shadow: 0 6px 24px rgba(200,146,42,0.25);
-    transform: translateY(-3px);
-  }
-
-  .nav-icon {
-    font-size: 1.8rem;
-    position: relative;
-    z-index: 1;
-  }
-
-  .nav-label {
-    font-size: 0.8rem;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--ink);
-    position: relative;
-    z-index: 1;
-  }
-
-  .nav-sub {
-    font-size: 0.68rem;
-    color: #9a8a75;
-    position: relative;
-    z-index: 1;
-    font-weight: 400;
-  }
-
-  /* ── CONTENT AREA ── */
+  /* CONTENT */
   .content-area {
     max-width: 720px;
     margin: 0 auto 4rem;
@@ -244,38 +179,25 @@
     position: relative;
     z-index: 1;
   }
-
-  .placeholder {
-    text-align: center;
-    padding: 4rem 2rem;
-    color: #b0a090;
-  }
-
+  .placeholder { text-align: center; padding: 4rem 2rem; color: #b0a090; }
   .placeholder .ph-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
   .placeholder p { font-size: 0.95rem; font-style: italic; }
 
-  /* ── LOADING ── */
-  .loading {
-    text-align: center;
-    padding: 3rem;
-  }
-
+  /* LOADING */
+  .loading { text-align: center; padding: 3rem; }
   .loader {
     display: inline-block;
-    width: 40px;
-    height: 40px;
+    width: 40px; height: 40px;
     border: 3px solid #e8dcc8;
     border-top-color: var(--gold);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
     margin-bottom: 1rem;
   }
-
   @keyframes spin { to { transform: rotate(360deg); } }
-
   .loading p { color: #9a8a75; font-style: italic; font-size: 0.9rem; }
 
-  /* ── CARD ── */
+  /* CARDS */
   .card {
     background: var(--card-bg);
     border: 1.5px solid #e8dcc8;
@@ -285,231 +207,52 @@
     box-shadow: 0 4px 20px var(--shadow);
     animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
   }
-
   @keyframes slideUp {
     from { opacity: 0; transform: translateY(20px) scale(0.97); }
     to   { opacity: 1; transform: translateY(0) scale(1); }
   }
-
   .card:nth-child(2) { animation-delay: 0.08s; }
   .card:nth-child(3) { animation-delay: 0.16s; }
   .card:nth-child(4) { animation-delay: 0.24s; }
   .card:nth-child(5) { animation-delay: 0.32s; }
 
-  /* Word card */
-  .word-header {
-    display: flex;
-    align-items: baseline;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .word-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: var(--ink);
-    letter-spacing: -0.01em;
-  }
-
-  .word-pos {
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: white;
-    background: var(--gold);
-    padding: 0.2rem 0.6rem;
-    border-radius: 99px;
-  }
-
-  .word-number {
-    font-size: 0.75rem;
-    color: #c0b09a;
-    font-weight: 500;
-    margin-left: auto;
-  }
-
+  .word-header { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.5rem; }
+  .word-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--ink); }
+  .word-pos { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: white; background: var(--gold); padding: 0.2rem 0.6rem; border-radius: 99px; }
+  .word-number { font-size: 0.75rem; color: #c0b09a; font-weight: 500; margin-left: auto; }
   .pronunciation {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-bottom: 0.9rem;
-    padding: 0.6rem 0.9rem;
-    background: var(--warm);
-    border-radius: 10px;
-    border-left: 3px solid var(--gold);
+    display: flex; align-items: center; gap: 0.5rem;
+    margin-bottom: 0.9rem; padding: 0.6rem 0.9rem;
+    background: var(--warm); border-radius: 10px; border-left: 3px solid var(--gold);
   }
+  .pron-text { font-size: 0.88rem; color: #6a5a45; font-style: italic; flex: 1; }
+  .definition { font-size: 0.95rem; color: #4a3a2a; line-height: 1.65; margin-bottom: 1rem; }
+  .section-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
+  .example { padding: 0.6rem 0.9rem; border-left: 2px solid #e0d4bc; margin-bottom: 0.45rem; font-size: 0.88rem; color: #5a4a38; line-height: 1.55; font-style: italic; }
 
-  .pron-icon { font-size: 1rem; }
+  .quote-card { background: linear-gradient(135deg, #1a2a4a, #2d4570); border: none; color: white; }
+  .quote-marks { font-family: 'Playfair Display', serif; font-size: 5rem; color: rgba(255,255,255,0.15); line-height: 0.8; margin-bottom: -1.2rem; }
+  .quote-text { font-family: 'Playfair Display', serif; font-size: clamp(1.1rem, 3vw, 1.4rem); font-style: italic; line-height: 1.6; color: rgba(255,255,255,0.95); margin-bottom: 1.25rem; }
+  .quote-author { font-size: 0.82rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-light); }
+  .quote-meaning { margin-top: 1rem; padding: 0.85rem; background: rgba(255,255,255,0.08); border-radius: 10px; font-size: 0.85rem; color: rgba(255,255,255,0.75); line-height: 1.55; }
 
-  .pron-text {
-    font-size: 0.88rem;
-    color: #6a5a45;
-    font-style: italic;
-    flex: 1;
-  }
+  .phrase-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--sage); margin-bottom: 0.35rem; }
+  .phrase-meaning { font-size: 0.88rem; color: #4a5a4a; margin-bottom: 0.75rem; line-height: 1.55; }
 
-  .definition {
-    font-size: 0.95rem;
-    color: #4a3a2a;
-    line-height: 1.65;
-    margin-bottom: 1rem;
-  }
+  .idiom-banner { background: linear-gradient(135deg, #4a1a1a, #7a2a1a); margin: -1.75rem -1.75rem 1.25rem; padding: 1.25rem 1.75rem; border-radius: 18px 18px 0 0; }
+  .idiom-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: white; }
+  .idiom-origin { font-size: 0.82rem; color: #8a6a55; margin-bottom: 0.75rem; padding: 0.5rem 0.8rem; background: var(--warm); border-radius: 8px; line-height: 1.5; }
 
-  .section-label {
-    font-size: 0.68rem;
-    font-weight: 600;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--gold);
-    margin-bottom: 0.5rem;
-  }
-
-  .example {
-    padding: 0.6rem 0.9rem;
-    border-left: 2px solid #e0d4bc;
-    margin-bottom: 0.45rem;
-    font-size: 0.88rem;
-    color: #5a4a38;
-    line-height: 1.55;
-    font-style: italic;
-  }
-
-  /* Quote card */
-  .quote-card {
-    background: linear-gradient(135deg, #1a2a4a, #2d4570);
-    border: none;
-    color: white;
-  }
-
-  .quote-marks {
-    font-family: 'Playfair Display', serif;
-    font-size: 5rem;
-    color: rgba(255,255,255,0.15);
-    line-height: 0.8;
-    margin-bottom: -1.2rem;
-  }
-
-  .quote-text {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(1.1rem, 3vw, 1.4rem);
-    font-weight: 400;
-    font-style: italic;
-    line-height: 1.6;
-    color: rgba(255,255,255,0.95);
-    margin-bottom: 1.25rem;
-  }
-
-  .quote-author {
-    font-size: 0.82rem;
-    font-weight: 600;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--gold-light);
-  }
-
-  .quote-meaning {
-    margin-top: 1rem;
-    padding: 0.85rem;
-    background: rgba(255,255,255,0.08);
-    border-radius: 10px;
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.75);
-    line-height: 1.55;
-  }
-
-  /* Phrase card */
-  .phrase-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.3rem;
-    font-weight: 700;
-    color: var(--sage);
-    margin-bottom: 0.35rem;
-  }
-
-  .phrase-meaning {
-    font-size: 0.88rem;
-    color: #4a5a4a;
-    margin-bottom: 0.75rem;
-    line-height: 1.55;
-  }
-
-  /* Idiom card */
-  .idiom-banner {
-    background: linear-gradient(135deg, #4a1a1a, #7a2a1a);
-    margin: -1.75rem -1.75rem 1.25rem;
-    padding: 1.25rem 1.75rem;
-    border-radius: 18px 18px 0 0;
-  }
-
-  .idiom-banner .section-label { color: rgba(255,255,255,0.6); margin-bottom: 0.25rem; }
-  .idiom-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: white;
-  }
-
-  .idiom-origin {
-    font-size: 0.82rem;
-    color: #8a6a55;
-    margin-bottom: 0.75rem;
-    padding: 0.5rem 0.8rem;
-    background: var(--warm);
-    border-radius: 8px;
-    line-height: 1.5;
-  }
-
-  /* Error */
-  .error-card {
-    background: #fff5f5;
-    border-color: #f5c0c0;
-    text-align: center;
-    padding: 2rem;
-    animation: slideUp 0.3s ease both;
-  }
-
+  .error-card { background: #fff5f5; border-color: #f5c0c0; text-align: center; padding: 2rem; animation: slideUp 0.3s ease both; }
   .error-icon { font-size: 2rem; margin-bottom: 0.5rem; }
-  .error-msg { font-size: 0.9rem; color: #c04040; line-height: 1.5; }
-  .error-msg a { color: var(--rust); font-weight: 600; }
+  .error-msg { font-size: 0.88rem; color: #c04040; line-height: 1.6; word-break: break-word; }
 
-  /* Section header */
-  .section-header {
-    text-align: center;
-    margin-bottom: 1.5rem;
-    animation: slideUp 0.35s ease both;
-  }
+  .section-header { text-align: center; margin-bottom: 1.5rem; animation: slideUp 0.35s ease both; }
+  .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--ink); }
+  .section-header p { font-size: 0.82rem; color: #9a8a75; margin-top: 0.25rem; }
+  .ornament { text-align: center; font-size: 1.2rem; color: #c8b89a; margin: 0.5rem 0 1.5rem; letter-spacing: 0.5rem; animation: slideUp 0.35s ease both; }
 
-  .section-header h2 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--ink);
-    letter-spacing: -0.01em;
-  }
-
-  .section-header p {
-    font-size: 0.82rem;
-    color: #9a8a75;
-    margin-top: 0.25rem;
-  }
-
-  /* Divider */
-  .ornament {
-    text-align: center;
-    font-size: 1.2rem;
-    color: #c8b89a;
-    margin: 0.5rem 0 1.5rem;
-    letter-spacing: 0.5rem;
-    animation: slideUp 0.35s ease both;
-  }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-track { background: var(--warm); }
-  ::-webkit-scrollbar-thumb { background: #c8b89a; border-radius: 3px; }
+  .change-key-btn { background: none; border: none; font-size: 0.75rem; color: #b0a090; cursor: pointer; text-decoration: underline; font-family: 'DM Sans', sans-serif; display: block; margin: 0 auto 2rem; }
 
   @media (max-width: 480px) {
     .nav-btn { min-width: calc(50% - 0.375rem); flex: 1; }
@@ -526,18 +269,18 @@
   <p class="header-sub">Expand your vocabulary, one beautiful word at a time.</p>
 </header>
 
-<!-- API Key Setup -->
 <div class="api-setup" id="apiSetup">
   <h3>🔑 Enter your Gemini API Key</h3>
-  <p>Get a free key in 2 minutes at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a> → "Get API Key". It's completely free.</p>
+  <p>Get a free key at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a> → click <strong>"Create API key"</strong>. It's free.</p>
   <div class="api-input-row">
-    <input type="password" id="apiKeyInput" placeholder="AIzaSy..." autocomplete="off" />
+    <input type="text" id="apiKeyInput" placeholder="Paste full API key here"
+      autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
     <button class="btn-save" onclick="saveKey()">Save</button>
   </div>
-  <div class="api-status" id="apiStatus">✓ API key saved! You can now tap any button.</div>
+  <button class="btn-test" onclick="testKey()">🧪 Test API Key first</button>
+  <div id="apiStatus"></div>
 </div>
 
-<!-- Nav Buttons -->
 <div class="nav-grid">
   <button class="nav-btn words" onclick="fetch5Words()">
     <span class="nav-icon">📖</span>
@@ -561,7 +304,6 @@
   </button>
 </div>
 
-<!-- Content -->
 <div class="content-area" id="contentArea">
   <div class="placeholder">
     <div class="ph-icon">✨</div>
@@ -569,32 +311,23 @@
   </div>
 </div>
 
-<div style="text-align:center; padding-bottom:2rem; position:relative; z-index:1;">
-  <button onclick="document.getElementById('apiSetup').style.display='block'; window.scrollTo({top:0,behavior:'smooth'})"
-    style="background:none;border:none;font-size:0.75rem;color:#b0a090;cursor:pointer;text-decoration:underline;font-family:'DM Sans',sans-serif;">
-    🔑 Change API Key
-  </button>
-</div>
+<button class="change-key-btn" onclick="changeKey()">🔑 Change API Key</button>
 
 <script>
-const API_KEY_STORAGE = 'wordwise_gemini_key';
+const STORAGE_KEY = 'wordwise_gemini_key';
 let currentKey = '';
 
-// ── API KEY ──
+// ── KEY MANAGEMENT ──
 function saveKey() {
   const val = document.getElementById('apiKeyInput').value.trim();
-  if (!val) return alert('Please enter your API key.');
+  if (!val) { showStatus('Please paste your API key first.', 'err'); return; }
   currentKey = val;
-  localStorage.setItem(API_KEY_STORAGE, val);
-  const status = document.getElementById('apiStatus');
-  status.style.display = 'block';
-  setTimeout(() => {
-    document.getElementById('apiSetup').style.display = 'none';
-  }, 1200);
+  localStorage.setItem(STORAGE_KEY, val);
+  showStatus('✓ Saved! Now tap Test API Key to verify it works.', 'ok');
 }
 
 function loadKey() {
-  const k = localStorage.getItem(API_KEY_STORAGE);
+  const k = localStorage.getItem(STORAGE_KEY);
   if (k) {
     currentKey = k;
     document.getElementById('apiSetup').style.display = 'none';
@@ -610,20 +343,76 @@ function getKey() {
   return currentKey;
 }
 
+function changeKey() {
+  currentKey = '';
+  localStorage.removeItem(STORAGE_KEY);
+  document.getElementById('apiKeyInput').value = '';
+  document.getElementById('apiStatus').style.display = 'none';
+  document.getElementById('apiSetup').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function showStatus(msg, type) {
+  const el = document.getElementById('apiStatus');
+  el.textContent = msg;
+  el.className = type;
+  el.style.display = 'block';
+}
+
+// ── TEST KEY ──
+async function testKey() {
+  const val = document.getElementById('apiKeyInput').value.trim() || currentKey;
+  if (!val) { showStatus('Paste your API key above first, then test.', 'err'); return; }
+
+  showStatus('⏳ Testing key — please wait...', 'info');
+
+  const models = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-pro'];
+  let worked = false;
+
+  for (const model of models) {
+    try {
+      const res = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${val}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: 'Say: OK' }] }],
+            generationConfig: { maxOutputTokens: 10 }
+          })
+        }
+      );
+      const data = await res.json();
+      if (res.ok && data.candidates) {
+        currentKey = val;
+        localStorage.setItem(STORAGE_KEY, val);
+        showStatus(`✅ Key works! Using model: ${model}. Tap Save then use the app!`, 'ok');
+        worked = true;
+        break;
+      } else {
+        const errMsg = data?.error?.message || `HTTP ${res.status}`;
+        if (res.status === 400 || res.status === 401 || res.status === 403) {
+          showStatus(`❌ Key rejected by Google: "${errMsg}"\n\nPlease create a NEW key at aistudio.google.com/app/apikey`, 'err');
+          return;
+        }
+      }
+    } catch (e) {
+      // network error, continue
+    }
+  }
+
+  if (!worked) {
+    showStatus('❌ Could not connect. Check your internet or try a new key at aistudio.google.com/app/apikey', 'err');
+  }
+}
+
 // ── GEMINI CALL ──
 async function callGemini(prompt) {
   const key = getKey();
   if (!key) throw new Error('NO_KEY');
 
-  // Try models in order — supports both old (AIzaSy) and new (AQ.) key formats
-  const models = [
-    'gemini-2.0-flash',
-    'gemini-1.5-flash',
-    'gemini-1.5-flash-latest',
-    'gemini-pro'
-  ];
-
-  let lastError = '';
+  const models = ['gemini-2.0-flash', 'gemini-1.5-flash', 'gemini-1.5-flash-latest', 'gemini-pro'];
+  let lastError = 'Unknown error';
 
   for (const model of models) {
     try {
@@ -639,17 +428,16 @@ async function callGemini(prompt) {
         }
       );
 
-      if (res.status === 404) continue; // model not found, try next
+      if (res.status === 404) continue;
+
+      const data = await res.json();
 
       if (!res.ok) {
-        const err = await res.json();
-        lastError = err?.error?.message || `HTTP ${res.status}`;
-        // If it's an auth error, no point trying other models
+        lastError = data?.error?.message || `HTTP ${res.status}`;
         if (res.status === 400 || res.status === 401 || res.status === 403) break;
         continue;
       }
 
-      const data = await res.json();
       const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
       if (text) return text;
     } catch (e) {
@@ -657,10 +445,10 @@ async function callGemini(prompt) {
     }
   }
 
-  throw new Error(lastError || 'All models failed. Check your API key.');
+  throw new Error(lastError);
 }
 
-// ── HELPERS ──
+// ── UI HELPERS ──
 function setActive(type) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   const map = { words: 0, quote: 1, phrases: 2, idiom: 3 };
@@ -669,10 +457,7 @@ function setActive(type) {
 
 function showLoading(msg) {
   document.getElementById('contentArea').innerHTML = `
-    <div class="loading">
-      <div class="loader"></div>
-      <p>${msg}</p>
-    </div>`;
+    <div class="loading"><div class="loader"></div><p>${msg}</p></div>`;
 }
 
 function showError(msg) {
@@ -684,64 +469,36 @@ function showError(msg) {
 }
 
 function parseJSON(text) {
-  const match = text.match(/```json\s*([\s\S]*?)\s*```/);
-  if (match) return JSON.parse(match[1]);
-  const match2 = text.match(/\[[\s\S]*\]|\{[\s\S]*\}/);
-  if (match2) return JSON.parse(match2[0]);
-  throw new Error('No JSON found');
+  // strip markdown code fences
+  text = text.replace(/```json\s*/gi, '').replace(/```\s*/g, '').trim();
+  const match = text.match(/\[[\s\S]*\]|\{[\s\S]*\}/);
+  if (match) return JSON.parse(match[0]);
+  throw new Error('Could not parse response as JSON');
 }
 
 // ── 5 WORDS ──
 async function fetch5Words() {
   setActive('words');
   showLoading('Discovering beautiful words for you…');
-
-  const prompt = `Give me 5 interesting English vocabulary words for daily learning. Return ONLY a JSON array with this exact structure:
-[
-  {
-    "word": "Ephemeral",
-    "part_of_speech": "adjective",
-    "pronunciation": "ih-FEM-er-ul",
-    "pronunciation_tip": "Think: 'a femoral artery' — stress the FEM",
-    "definition": "Lasting for a very short time; transitory.",
-    "examples": [
-      "The ephemeral beauty of cherry blossoms makes them all the more precious.",
-      "Social media trends are often ephemeral, fading within days.",
-      "She chased ephemeral dreams that slipped through her fingers like smoke."
-    ]
-  }
-]
-Return exactly 5 words. No explanation, only the JSON array.`;
-
+  const prompt = `Give me 5 interesting English vocabulary words for daily learning. Return ONLY a JSON array:
+[{"word":"Ephemeral","part_of_speech":"adjective","pronunciation":"ih-FEM-er-ul","pronunciation_tip":"Stress the FEM syllable","definition":"Lasting for a very short time.","examples":["The ephemeral beauty of cherry blossoms is precious.","Social trends are often ephemeral.","She chased ephemeral dreams."]}]
+Return exactly 5 words. ONLY the JSON array, nothing else.`;
   try {
     const text = await callGemini(prompt);
-    const words = parseJSON(text);
-    renderWords(words);
+    renderWords(parseJSON(text));
   } catch (e) {
     if (e.message === 'NO_KEY') return;
-    showError(`Could not load words. <br><small style="word-break:break-all">${e.message}</small><br><br><a href="https://aistudio.google.com/app/apikey" target="_blank">Check your API key →</a>`);
+    showError(`Error: ${e.message}<br><br><small>Tap "Change API Key" below and test your key again.</small>`);
   }
 }
 
 function renderWords(words) {
   const area = document.getElementById('contentArea');
-  area.innerHTML = `
-    <div class="section-header">
-      <h2>5 Words of the Day</h2>
-      <p>Learn, pronounce, and use them confidently</p>
-    </div>
-    <div class="ornament">· · ✦ · ·</div>
-  `;
-
+  area.innerHTML = `<div class="section-header"><h2>5 Words of the Day</h2><p>Learn, pronounce, and use them confidently</p></div><div class="ornament">· · ✦ · ·</div>`;
   words.forEach((w, i) => {
     const card = document.createElement('div');
     card.className = 'card';
     card.style.animationDelay = `${i * 0.09}s`;
-
-    const examples = (w.examples || []).map(ex =>
-      `<div class="example">"${ex}"</div>`
-    ).join('');
-
     card.innerHTML = `
       <div class="word-header">
         <span class="word-title">${w.word}</span>
@@ -749,16 +506,12 @@ function renderWords(words) {
         <span class="word-number">${i + 1} / 5</span>
       </div>
       <div class="pronunciation">
-        <span class="pron-icon">🔊</span>
-        <span class="pron-text">
-          <strong>${w.pronunciation}</strong>
-          ${w.pronunciation_tip ? `— ${w.pronunciation_tip}` : ''}
-        </span>
+        <span>🔊</span>
+        <span class="pron-text"><strong>${w.pronunciation}</strong>${w.pronunciation_tip ? ' — ' + w.pronunciation_tip : ''}</span>
       </div>
       <div class="definition">${w.definition}</div>
       <div class="section-label">Example Sentences</div>
-      ${examples}
-    `;
+      ${(w.examples||[]).map(ex => `<div class="example">"${ex}"</div>`).join('')}`;
     area.appendChild(card);
   });
 }
@@ -766,91 +519,54 @@ function renderWords(words) {
 // ── QUOTE ──
 async function fetchQuote() {
   setActive('quote');
-  showLoading('Finding today's perfect quote…');
-
-  const prompt = `Give me an inspiring, thought-provoking quote of the day. Return ONLY a JSON object:
-{
-  "quote": "The full quote text here.",
-  "author": "Author Name",
-  "meaning": "A 2-3 sentence explanation of what this quote means and how to apply it in daily life."
-}
-Choose something genuinely profound — not overused clichés. Return only the JSON, no extra text.`;
-
+  showLoading('Finding today\'s perfect quote…');
+  const prompt = `Give me an inspiring quote of the day. Return ONLY this JSON:
+{"quote":"The quote text here.","author":"Author Name","meaning":"2-3 sentence explanation of the quote and how to apply it."}
+ONLY the JSON, nothing else.`;
   try {
     const text = await callGemini(prompt);
-    const q = parseJSON(text);
-    renderQuote(q);
+    renderQuote(parseJSON(text));
   } catch (e) {
     if (e.message === 'NO_KEY') return;
-    showError(`Could not load quote. <br><small>${e.message}</small>`);
+    showError(`Error: ${e.message}`);
   }
 }
 
 function renderQuote(q) {
   document.getElementById('contentArea').innerHTML = `
-    <div class="section-header">
-      <h2>Quote of the Day</h2>
-      <p>A thought to carry with you</p>
-    </div>
+    <div class="section-header"><h2>Quote of the Day</h2><p>A thought to carry with you</p></div>
     <div class="ornament">· · ✦ · ·</div>
     <div class="card quote-card">
       <div class="quote-marks">"</div>
       <div class="quote-text">${q.quote}</div>
       <div class="quote-author">— ${q.author}</div>
       <div class="quote-meaning">💡 ${q.meaning}</div>
-    </div>
-  `;
+    </div>`;
 }
 
 // ── 5 PHRASES ──
 async function fetch5Phrases() {
   setActive('phrases');
   showLoading('Curating powerful phrases for you…');
-
-  const prompt = `Give me 5 useful English phrases or expressions for daily communication. Include formal, informal, and professional contexts. Return ONLY a JSON array:
-[
-  {
-    "phrase": "Break the ice",
-    "type": "Social expression",
-    "meaning": "To do or say something to relieve tension or get a conversation started in an awkward situation.",
-    "examples": [
-      "He told a joke to break the ice at the start of the meeting.",
-      "A simple compliment can help you break the ice with new colleagues."
-    ],
-    "tip": "Use this when starting conversations in unfamiliar social settings."
-  }
-]
-Return exactly 5 phrases. No explanation, only the JSON array.`;
-
+  const prompt = `Give me 5 useful English phrases or expressions. Return ONLY a JSON array:
+[{"phrase":"Break the ice","type":"Social expression","meaning":"To relieve tension or start a conversation.","examples":["He told a joke to break the ice.","A compliment can break the ice with new colleagues."],"tip":"Use in unfamiliar social settings."}]
+Exactly 5 phrases. ONLY the JSON array, nothing else.`;
   try {
     const text = await callGemini(prompt);
-    const phrases = parseJSON(text);
-    renderPhrases(phrases);
+    renderPhrases(parseJSON(text));
   } catch (e) {
     if (e.message === 'NO_KEY') return;
-    showError(`Could not load phrases. <br><small>${e.message}</small>`);
+    showError(`Error: ${e.message}`);
   }
 }
 
 function renderPhrases(phrases) {
   const area = document.getElementById('contentArea');
-  area.innerHTML = `
-    <div class="section-header">
-      <h2>5 Phrases to Learn</h2>
-      <p>Speak more naturally and confidently</p>
-    </div>
-    <div class="ornament">· · ✦ · ·</div>
-  `;
-
+  area.innerHTML = `<div class="section-header"><h2>5 Phrases to Learn</h2><p>Speak more naturally and confidently</p></div><div class="ornament">· · ✦ · ·</div>`;
   phrases.forEach((p, i) => {
     const card = document.createElement('div');
     card.className = 'card';
     card.style.animationDelay = `${i * 0.09}s`;
-
-    const examples = (p.examples || []).map(ex =>
-      `<div class="example">"${ex}"</div>`
-    ).join('');
-
     card.innerHTML = `
       <div class="word-header">
         <span class="phrase-title">${p.phrase}</span>
@@ -859,9 +575,8 @@ function renderPhrases(phrases) {
       </div>
       <div class="phrase-meaning">${p.meaning}</div>
       <div class="section-label">In Context</div>
-      ${examples}
-      ${p.tip ? `<div style="margin-top:0.75rem; padding:0.6rem 0.9rem; background:#f0f8f1; border-radius:8px; font-size:0.82rem; color:#4a6a4a;">💡 <strong>Tip:</strong> ${p.tip}</div>` : ''}
-    `;
+      ${(p.examples||[]).map(ex => `<div class="example">"${ex}"</div>`).join('')}
+      ${p.tip ? `<div style="margin-top:0.75rem;padding:0.6rem 0.9rem;background:#f0f8f1;border-radius:8px;font-size:0.82rem;color:#4a6a4a;">💡 <strong>Tip:</strong> ${p.tip}</div>` : ''}`;
     area.appendChild(card);
   });
 }
@@ -869,65 +584,37 @@ function renderPhrases(phrases) {
 // ── IDIOM ──
 async function fetchIdiom() {
   setActive('idiom');
-  showLoading('Unearthing today's idiom…');
-
-  const prompt = `Give me an interesting English idiom of the day. Return ONLY a JSON object:
-{
-  "idiom": "Once in a blue moon",
-  "meaning": "Something that happens very rarely.",
-  "origin": "The phrase originated from the rare occurrence of a second full moon in a calendar month, first used in this figurative sense in the 1800s.",
-  "examples": [
-    "I only see my cousin once in a blue moon since she moved abroad.",
-    "We get snow here once in a blue moon — maybe every ten years.",
-    "He smiles once in a blue moon, so when he does, it really means something."
-  ],
-  "usage_tip": "Use it to emphasize extreme rarity — something so infrequent it's almost never."
-}
-Return only the JSON, no extra text.`;
-
+  showLoading('Unearthing today\'s idiom…');
+  const prompt = `Give me an interesting English idiom of the day. Return ONLY this JSON:
+{"idiom":"Once in a blue moon","meaning":"Something that happens very rarely.","origin":"Brief history of the phrase.","examples":["I only see my cousin once in a blue moon.","We get snow here once in a blue moon.","He smiles once in a blue moon."],"usage_tip":"When to use this idiom."}
+ONLY the JSON, nothing else.`;
   try {
     const text = await callGemini(prompt);
-    const idiom = parseJSON(text);
-    renderIdiom(idiom);
+    renderIdiom(parseJSON(text));
   } catch (e) {
     if (e.message === 'NO_KEY') return;
-    showError(`Could not load idiom. <br><small>${e.message}</small>`);
+    showError(`Error: ${e.message}`);
   }
 }
 
 function renderIdiom(d) {
-  const examples = (d.examples || []).map(ex =>
-    `<div class="example">"${ex}"</div>`
-  ).join('');
-
   document.getElementById('contentArea').innerHTML = `
-    <div class="section-header">
-      <h2>Idiom of the Day</h2>
-      <p>Master the language people actually speak</p>
-    </div>
+    <div class="section-header"><h2>Idiom of the Day</h2><p>Master the language people actually speak</p></div>
     <div class="ornament">· · ✦ · ·</div>
     <div class="card">
       <div class="idiom-banner">
-        <div class="section-label">🌿 Today's Idiom</div>
+        <div class="section-label" style="color:rgba(255,255,255,0.6)">🌿 Today's Idiom</div>
         <div class="idiom-title">${d.idiom}</div>
       </div>
       <div class="definition" style="margin-bottom:0.9rem"><strong>Meaning:</strong> ${d.meaning}</div>
       ${d.origin ? `<div class="idiom-origin">📜 <strong>Origin:</strong> ${d.origin}</div>` : ''}
       <div class="section-label" style="margin-top:0.75rem">Example Sentences</div>
-      ${examples}
-      ${d.usage_tip ? `<div style="margin-top:0.75rem; padding:0.7rem 0.9rem; background:#fff8ee; border-radius:8px; font-size:0.83rem; color:#6a4a20; border-left:3px solid var(--gold);">💡 <strong>When to use it:</strong> ${d.usage_tip}</div>` : ''}
-    </div>
-  `;
+      ${(d.examples||[]).map(ex => `<div class="example">"${ex}"</div>`).join('')}
+      ${d.usage_tip ? `<div style="margin-top:0.75rem;padding:0.7rem 0.9rem;background:#fff8ee;border-radius:8px;font-size:0.83rem;color:#6a4a20;border-left:3px solid var(--gold);">💡 <strong>When to use it:</strong> ${d.usage_tip}</div>` : ''}
+    </div>`;
 }
 
-// ── INIT ──
 loadKey();
-
-// Allow resetting key by typing "reset" in console or via URL param
-if (location.search.includes('reset')) {
-  localStorage.removeItem(API_KEY_STORAGE);
-  location.href = location.pathname;
-}
 </script>
 </body>
 </html>
