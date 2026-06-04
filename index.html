@@ -7,253 +7,63 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --ink: #1a1208;
-    --paper: #f5f0e8;
-    --cream: #ede8dc;
-    --gold: #c8973a;
-    --gold-light: #e8c878;
-    --rust: #b85c38;
-    --sage: #5a7a5a;
-    --muted: #8a7f6e;
-    --border: #d4cfc4;
-    --card-bg: #faf7f2;
-    --shadow: rgba(26,18,8,0.12);
+    --ink: #1a1208; --paper: #f5f0e8; --cream: #ede8dc;
+    --gold: #c8973a; --gold-light: #e8c878; --rust: #b85c38;
+    --sage: #5a7a5a; --muted: #8a7f6e; --border: #d4cfc4;
+    --card-bg: #faf7f2; --shadow: rgba(26,18,8,0.12);
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    background: var(--paper);
-    color: var(--ink);
-    min-height: 100vh;
-    position: relative;
-    overflow-x: hidden;
-  }
-
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 0;
-  }
-
-  .container {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 24px 80px;
-    position: relative;
-    z-index: 1;
-  }
-
-  header {
-    text-align: center;
-    padding: 52px 0 36px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 44px;
-    position: relative;
-  }
-
-  header::after {
-    content: '';
-    position: absolute;
-    bottom: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 3px;
-    background: var(--gold);
-  }
-
-  .brand {
-    font-family: 'Playfair Display', serif;
-    font-size: 3.2rem;
-    font-weight: 900;
-    letter-spacing: -1px;
-    color: var(--ink);
-    line-height: 1;
-  }
-
+  body { font-family: 'DM Sans', sans-serif; background: var(--paper); color: var(--ink); min-height: 100vh; position: relative; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E"); pointer-events: none; z-index: 0; }
+  .container { max-width: 860px; margin: 0 auto; padding: 0 24px 80px; position: relative; z-index: 1; }
+  header { text-align: center; padding: 52px 0 36px; border-bottom: 1px solid var(--border); margin-bottom: 44px; position: relative; }
+  header::after { content: ''; position: absolute; bottom: -4px; left: 50%; transform: translateX(-50%); width: 60px; height: 3px; background: var(--gold); }
+  .brand { font-family: 'Playfair Display', serif; font-size: 3.2rem; font-weight: 900; letter-spacing: -1px; color: var(--ink); line-height: 1; }
   .brand span { color: var(--gold); font-style: italic; }
+  .tagline { font-size: 0.85rem; color: var(--muted); letter-spacing: 0.2em; text-transform: uppercase; margin-top: 10px; font-weight: 500; }
+  .date-strip { text-align: center; font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--muted); margin-bottom: 40px; letter-spacing: 0.1em; }
 
-  .tagline {
-    font-size: 0.85rem;
-    color: var(--muted);
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    margin-top: 10px;
-    font-weight: 500;
-  }
-
-  .date-strip {
-    text-align: center;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.75rem;
-    color: var(--muted);
-    margin-bottom: 40px;
-    letter-spacing: 0.1em;
-  }
-
-  /* API Section */
-  .api-section {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px 24px;
-    margin-bottom: 14px;
-  }
-
-  .api-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
-  }
-
-  .api-label {
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.12em;
-    color: var(--muted);
-    white-space: nowrap;
-    min-width: 80px;
-  }
-
-  .provider-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: #e8f5e9;
-    color: var(--sage);
-    font-size: 0.72rem;
-    font-weight: 600;
-    padding: 3px 10px;
-    border-radius: 20px;
-    border: 1px solid #c8e6c9;
-    white-space: nowrap;
-  }
-
-  .api-section input {
-    flex: 1;
-    min-width: 180px;
-    padding: 9px 14px;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--paper);
-    font-family: 'DM Mono', monospace;
-    font-size: 0.82rem;
-    color: var(--ink);
-    outline: none;
-    transition: border-color 0.2s;
-  }
-
+  .api-section { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; padding: 20px 24px; margin-bottom: 14px; }
+  .api-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .api-label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); white-space: nowrap; min-width: 80px; }
+  .provider-badge { display: inline-flex; align-items: center; gap: 6px; background: #e8f5e9; color: var(--sage); font-size: 0.72rem; font-weight: 600; padding: 3px 10px; border-radius: 20px; border: 1px solid #c8e6c9; white-space: nowrap; }
+  .api-section input { flex: 1; min-width: 180px; padding: 9px 14px; border: 1px solid var(--border); border-radius: 8px; background: var(--paper); font-family: 'DM Mono', monospace; font-size: 0.82rem; color: var(--ink); outline: none; transition: border-color 0.2s; }
   .api-section input:focus { border-color: var(--gold); }
-
-  .api-save-btn {
-    padding: 9px 20px;
-    background: var(--gold);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.82rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background 0.2s, transform 0.1s;
-    white-space: nowrap;
-  }
-
+  .api-save-btn { padding: 9px 20px; background: var(--gold); color: #fff; border: none; border-radius: 8px; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: background 0.2s, transform 0.1s; white-space: nowrap; }
   .api-save-btn:hover { background: #b8832a; }
   .api-save-btn:active { transform: scale(0.97); }
-
   .api-status { font-size: 0.78rem; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
   .api-status.ok { background: #e8f5e9; color: var(--sage); }
   .api-status.missing { background: #fff3e0; color: var(--rust); }
-
-  .api-hint {
-    margin-top: 10px;
-    font-size: 0.78rem;
-    color: var(--muted);
-    line-height: 1.5;
-  }
-
+  .api-hint { margin-top: 10px; font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
   .api-hint a { color: var(--gold); text-decoration: none; font-weight: 500; }
   .api-hint a:hover { text-decoration: underline; }
 
-  /* Nav */
-  .nav-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin-bottom: 44px;
-  }
-
+  .nav-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 44px; }
   @media (min-width: 580px) { .nav-grid { grid-template-columns: repeat(4, 1fr); } }
-
-  .nav-tile {
-    background: var(--card-bg);
-    border: 1.5px solid var(--border);
-    border-radius: 14px;
-    padding: 24px 16px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s, background 0.2s;
-    user-select: none;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .nav-tile::before {
-    content: '';
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    height: 3px;
-    background: var(--gold);
-    transform: scaleX(0);
-    transition: transform 0.25s;
-    transform-origin: left;
-  }
-
+  .nav-tile { background: var(--card-bg); border: 1.5px solid var(--border); border-radius: 14px; padding: 24px 16px; text-align: center; cursor: pointer; transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s, background 0.2s; user-select: none; position: relative; overflow: hidden; }
+  .nav-tile::before { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: var(--gold); transform: scaleX(0); transition: transform 0.25s; transform-origin: left; }
   .nav-tile:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 8px 24px var(--shadow); }
   .nav-tile:hover::before { transform: scaleX(1); }
   .nav-tile.active { border-color: var(--gold); background: #fdf9f0; box-shadow: 0 6px 20px var(--shadow); }
   .nav-tile.active::before { transform: scaleX(1); }
-
   .tile-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
   .tile-label { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--ink); }
   .tile-sub { font-size: 0.72rem; color: var(--muted); margin-top: 4px; letter-spacing: 0.04em; }
 
-  /* Content */
   .content-panel { min-height: 320px; }
-
-  .panel-header {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
-
+  .panel-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
   .panel-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--ink); }
+  .panel-meta { font-size: 0.75rem; color: var(--muted); font-family: 'DM Mono', monospace; }
 
-  .refresh-btn {
-    background: none;
-    border: 1.5px solid var(--border);
-    border-radius: 8px;
-    padding: 7px 16px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.78rem;
-    color: var(--muted);
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s;
-  }
-
+  .btn-row { display: flex; gap: 8px; align-items: center; }
+  .refresh-btn { background: none; border: 1.5px solid var(--border); border-radius: 8px; padding: 7px 14px; font-family: 'DM Sans', sans-serif; font-size: 0.78rem; color: var(--muted); cursor: pointer; font-weight: 500; transition: all 0.2s; }
   .refresh-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .refresh-btn.force { border-color: var(--rust); color: var(--rust); }
+  .refresh-btn.force:hover { background: #fff5f5; }
+
+  .cached-badge { font-size: 0.7rem; background: #e8f5e9; color: var(--sage); padding: 3px 9px; border-radius: 20px; font-weight: 500; border: 1px solid #c8e6c9; }
+  .fresh-badge { font-size: 0.7rem; background: #fff3e0; color: var(--rust); padding: 3px 9px; border-radius: 20px; font-weight: 500; border: 1px solid #ffe0b2; }
 
   .loading { text-align: center; padding: 60px 20px; }
   .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 16px; }
@@ -265,106 +75,56 @@
   .empty-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem; }
 
   .word-grid { display: grid; gap: 16px; }
+  .word-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 24px 28px; animation: fadeUp 0.4s ease both; }
+  .word-card:nth-child(2) { animation-delay:.07s; } .word-card:nth-child(3) { animation-delay:.14s; } .word-card:nth-child(4) { animation-delay:.21s; } .word-card:nth-child(5) { animation-delay:.28s; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:translateY(0); } }
+  .word-top { display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; margin-bottom:8px; }
+  .word-main { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:900; color:var(--ink); }
+  .word-pos { font-size:0.72rem; font-weight:500; text-transform:uppercase; letter-spacing:0.12em; color:var(--gold); border:1px solid var(--gold-light); padding:2px 9px; border-radius:20px; background:#fdf9f0; }
+  .word-pronunciation { font-family:'DM Mono',monospace; font-size:0.88rem; color:var(--rust); margin-bottom:10px; }
+  .word-pronunciation::before { content:'/ '; } .word-pronunciation::after { content:' /'; }
+  .word-meaning { font-size:0.95rem; color:#3a3020; line-height:1.6; margin-bottom:14px; padding-bottom:14px; border-bottom:1px dashed var(--border); }
+  .sentences-label { font-size:0.72rem; text-transform:uppercase; letter-spacing:0.14em; color:var(--muted); font-weight:500; margin-bottom:8px; }
+  .sentence-item { font-size:0.88rem; color:#4a4030; line-height:1.65; padding:6px 0 6px 16px; border-left:2px solid var(--gold-light); margin-bottom:6px; }
 
-  .word-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 24px 28px;
-    animation: fadeUp 0.4s ease both;
-  }
+  .quote-card { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:40px 44px; text-align:center; animation:fadeUp 0.4s ease both; position:relative; }
+  .quote-mark { font-family:'Playfair Display',serif; font-size:6rem; color:var(--gold-light); line-height:0.6; position:absolute; top:28px; left:32px; opacity:0.6; }
+  .quote-text { font-family:'Playfair Display',serif; font-size:1.45rem; font-style:italic; line-height:1.65; color:var(--ink); margin-bottom:24px; position:relative; z-index:1; }
+  .quote-author { font-size:0.82rem; font-weight:500; text-transform:uppercase; letter-spacing:0.18em; color:var(--gold); }
+  .quote-divider { width:36px; height:2px; background:var(--gold); margin:0 auto 12px; }
 
-  .word-card:nth-child(2) { animation-delay: 0.07s; }
-  .word-card:nth-child(3) { animation-delay: 0.14s; }
-  .word-card:nth-child(4) { animation-delay: 0.21s; }
-  .word-card:nth-child(5) { animation-delay: 0.28s; }
+  .phrase-card { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:22px 26px; animation:fadeUp 0.4s ease both; display:grid; gap:8px; }
+  .phrase-card:nth-child(2){animation-delay:.07s;}.phrase-card:nth-child(3){animation-delay:.14s;}.phrase-card:nth-child(4){animation-delay:.21s;}.phrase-card:nth-child(5){animation-delay:.28s;}
+  .phrase-num { font-family:'DM Mono',monospace; font-size:0.7rem; color:var(--gold); font-weight:500; text-transform:uppercase; letter-spacing:0.1em; }
+  .phrase-title { font-family:'Playfair Display',serif; font-size:1.2rem; font-weight:700; color:var(--ink); }
+  .phrase-meaning { font-size:0.88rem; color:#3a3020; line-height:1.6; }
+  .phrase-example { font-size:0.85rem; color:var(--muted); font-style:italic; padding-left:14px; border-left:2px solid var(--sage); margin-top:2px; }
+  .phrase-type { display:inline-block; font-size:0.68rem; font-weight:500; text-transform:uppercase; letter-spacing:0.1em; padding:2px 8px; border-radius:20px; margin-bottom:4px; }
+  .phrase-type.collocation { background:#e3f2fd; color:#1565c0; border:1px solid #bbdefb; }
+  .phrase-type.expression { background:#f3e5f5; color:#6a1b9a; border:1px solid #e1bee7; }
+  .phrase-type.phrasal { background:#e8f5e9; color:#2e7d32; border:1px solid #c8e6c9; }
+  .phrase-type.idiom { background:#fff3e0; color:#e65100; border:1px solid #ffe0b2; }
 
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+  .idiom-card { background:var(--card-bg); border:1px solid var(--border); border-radius:14px; padding:32px 36px; animation:fadeUp 0.4s ease both; }
+  .idiom-tag { display:inline-block; font-size:0.7rem; font-weight:500; text-transform:uppercase; letter-spacing:0.14em; color:var(--sage); border:1px solid var(--sage); padding:2px 10px; border-radius:20px; margin-bottom:14px; }
+  .idiom-phrase { font-family:'Playfair Display',serif; font-size:1.8rem; font-weight:900; font-style:italic; color:var(--ink); margin-bottom:14px; line-height:1.3; }
+  .idiom-meaning { font-size:0.95rem; line-height:1.65; color:#3a3020; margin-bottom:18px; padding-bottom:18px; border-bottom:1px dashed var(--border); }
+  .idiom-origin { font-size:0.82rem; color:var(--muted); line-height:1.6; margin-bottom:14px; }
+  .idiom-examples { display:grid; gap:8px; }
 
-  .word-top { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
-  .word-main { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--ink); }
-  .word-pos { font-size: 0.72rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold); border: 1px solid var(--gold-light); padding: 2px 9px; border-radius: 20px; background: #fdf9f0; }
-  .word-pronunciation { font-family: 'DM Mono', monospace; font-size: 0.88rem; color: var(--rust); margin-bottom: 10px; letter-spacing: 0.02em; }
-  .word-pronunciation::before { content: '/ '; }
-  .word-pronunciation::after { content: ' /'; }
-  .word-meaning { font-size: 0.95rem; color: #3a3020; line-height: 1.6; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px dashed var(--border); }
-  .sentences-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); font-weight: 500; margin-bottom: 8px; }
-  .sentence-item { font-size: 0.88rem; color: #4a4030; line-height: 1.65; padding: 6px 0 6px 16px; border-left: 2px solid var(--gold-light); margin-bottom: 6px; }
-
-  .quote-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 40px 44px;
-    text-align: center;
-    animation: fadeUp 0.4s ease both;
-    position: relative;
-  }
-
-  .quote-mark { font-family: 'Playfair Display', serif; font-size: 6rem; color: var(--gold-light); line-height: 0.6; position: absolute; top: 28px; left: 32px; opacity: 0.6; }
-  .quote-text { font-family: 'Playfair Display', serif; font-size: 1.45rem; font-style: italic; line-height: 1.65; color: var(--ink); margin-bottom: 24px; position: relative; z-index: 1; }
-  .quote-author { font-size: 0.82rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; color: var(--gold); }
-  .quote-divider { width: 36px; height: 2px; background: var(--gold); margin: 0 auto 12px; }
-
-  .phrase-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 22px 26px;
-    animation: fadeUp 0.4s ease both;
-    display: grid;
-    gap: 8px;
-  }
-
-  .phrase-card:nth-child(2) { animation-delay: 0.07s; }
-  .phrase-card:nth-child(3) { animation-delay: 0.14s; }
-  .phrase-card:nth-child(4) { animation-delay: 0.21s; }
-  .phrase-card:nth-child(5) { animation-delay: 0.28s; }
-
-  .phrase-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--ink); }
-  .phrase-meaning { font-size: 0.88rem; color: #3a3020; line-height: 1.6; }
-  .phrase-example { font-size: 0.85rem; color: var(--muted); font-style: italic; padding-left: 14px; border-left: 2px solid var(--sage); margin-top: 2px; }
-
-  .idiom-card {
-    background: var(--card-bg);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 32px 36px;
-    animation: fadeUp 0.4s ease both;
-  }
-
-  .idiom-tag { display: inline-block; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.14em; color: var(--sage); border: 1px solid var(--sage); padding: 2px 10px; border-radius: 20px; margin-bottom: 14px; }
-  .idiom-phrase { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; font-style: italic; color: var(--ink); margin-bottom: 14px; line-height: 1.3; }
-  .idiom-meaning { font-size: 0.95rem; line-height: 1.65; color: #3a3020; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px dashed var(--border); }
-  .idiom-origin { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
-  .idiom-examples { display: grid; gap: 8px; }
-
-  .error-box {
-    background: #fff5f5;
-    border: 1px solid #fca5a5;
-    border-radius: 10px;
-    padding: 16px 20px;
-    font-size: 0.88rem;
-    color: var(--rust);
-    animation: fadeUp 0.3s ease;
-    line-height: 1.6;
-  }
-
-  footer { text-align: center; margin-top: 60px; padding-top: 28px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--muted); letter-spacing: 0.06em; }
-  footer strong { font-family: 'Playfair Display', serif; font-style: italic; color: var(--gold); font-size: 0.85rem; }
+  .error-box { background:#fff5f5; border:1px solid #fca5a5; border-radius:10px; padding:16px 20px; font-size:0.88rem; color:var(--rust); animation:fadeUp 0.3s ease; line-height:1.6; }
+  footer { text-align:center; margin-top:60px; padding-top:28px; border-top:1px solid var(--border); font-size:0.75rem; color:var(--muted); letter-spacing:0.06em; }
+  footer strong { font-family:'Playfair Display',serif; font-style:italic; color:var(--gold); font-size:0.85rem; }
 </style>
 </head>
 <body>
-
 <div class="container">
   <header>
     <div class="brand">Lexi<span>ca</span></div>
     <div class="tagline">Your Daily Language Companion</div>
   </header>
-
   <div class="date-strip" id="dateStrip"></div>
 
-  <!-- API Key -->
   <div class="api-section">
     <div class="api-row">
       <span class="api-label">API Key</span>
@@ -374,11 +134,10 @@
       <span class="api-status" id="apiStatus">—</span>
     </div>
     <div class="api-hint">
-      Get a free key at <a href="https://console.groq.com" target="_blank">console.groq.com</a> → Sign up → API Keys → Create API Key &nbsp;|&nbsp; Key starts with <code>gsk_</code> &nbsp;|&nbsp; Free tier: 14,400 requests/day
+      Get a free key at <a href="https://console.groq.com" target="_blank">console.groq.com</a> → Sign up → API Keys → Create API Key &nbsp;|&nbsp; Starts with <code>gsk_</code> &nbsp;|&nbsp; 14,400 requests/day free
     </div>
   </div>
 
-  <!-- Nav Tiles -->
   <div class="nav-grid">
     <div class="nav-tile" id="tile-words" onclick="activate('words')">
       <span class="tile-icon">📖</span>
@@ -402,7 +161,6 @@
     </div>
   </div>
 
-  <!-- Content Panel -->
   <div class="content-panel" id="contentPanel">
     <div class="empty-state">
       <div class="empty-icon">🌿</div>
@@ -411,37 +169,49 @@
   </div>
 
   <footer>
-    <strong>Lexica</strong> &nbsp;·&nbsp; Powered by Groq AI (Llama 3) &nbsp;·&nbsp; Expand your vocabulary every day
+    <strong>Lexica</strong> &nbsp;·&nbsp; Powered by Groq AI (Llama 3) &nbsp;·&nbsp; Content refreshes daily at midnight
   </footer>
 </div>
 
 <script>
-// Date
+// ── Date ──────────────────────────────────────────────────────
 const now = new Date();
+const TODAY = now.toISOString().split('T')[0]; // YYYY-MM-DD
 document.getElementById('dateStrip').textContent =
-  now.toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric' }).toUpperCase();
+  now.toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).toUpperCase();
 
-// API Key
+// ── API Key ───────────────────────────────────────────────────
 let API_KEY = localStorage.getItem('lexica_groq_key') || '';
 const apiInput = document.getElementById('apiKeyInput');
 const apiStatus = document.getElementById('apiStatus');
-
 if (API_KEY) { apiInput.value = API_KEY; setStatus('ok'); } else { setStatus('missing'); }
 
 function setStatus(s) {
-  if (s === 'ok') { apiStatus.textContent = '✓ Key saved'; apiStatus.className = 'api-status ok'; }
-  else { apiStatus.textContent = 'No key'; apiStatus.className = 'api-status missing'; }
+  apiStatus.textContent = s==='ok' ? '✓ Key saved' : 'No key';
+  apiStatus.className = 'api-status ' + (s==='ok'?'ok':'missing');
 }
-
 function saveApiKey() {
   const val = apiInput.value.trim();
-  if (!val) { apiStatus.textContent = 'Enter a key'; apiStatus.className = 'api-status missing'; return; }
-  API_KEY = val;
-  localStorage.setItem('lexica_groq_key', val);
-  setStatus('ok');
+  if (!val) { apiStatus.textContent='Enter a key'; apiStatus.className='api-status missing'; return; }
+  API_KEY = val; localStorage.setItem('lexica_groq_key', val); setStatus('ok');
 }
 
-// State
+// ── Daily Cache ───────────────────────────────────────────────
+// Keys: lexica_cache_<section>_<date>
+function getCached(section) {
+  try {
+    const raw = localStorage.getItem(`lexica_cache_${section}_${TODAY}`);
+    return raw ? JSON.parse(raw) : null;
+  } catch { return null; }
+}
+function setCache(section, data) {
+  // Clean old cache keys first
+  Object.keys(localStorage).filter(k => k.startsWith('lexica_cache_') && !k.includes(TODAY))
+    .forEach(k => localStorage.removeItem(k));
+  localStorage.setItem(`lexica_cache_${section}_${TODAY}`, JSON.stringify(data));
+}
+
+// ── State ─────────────────────────────────────────────────────
 let activeSection = null;
 
 function activate(section) {
@@ -449,18 +219,15 @@ function activate(section) {
   document.getElementById('tile-' + section).classList.add('active');
   if (activeSection === section) return;
   activeSection = section;
-  loadSection(section);
+  loadSection(section, false);
 }
 
-// Groq API call (OpenAI-compatible, uses Llama 3.3 70B)
+// ── Groq API ──────────────────────────────────────────────────
 async function callGroq(prompt) {
   if (!API_KEY) throw new Error('Please enter your Groq API key above and click Save Key.');
   const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${API_KEY}`
-    },
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${API_KEY}` },
     body: JSON.stringify({
       model: 'llama-3.3-70b-versatile',
       messages: [{ role: 'user', content: prompt }],
@@ -469,146 +236,196 @@ async function callGroq(prompt) {
     })
   });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
+    const err = await res.json().catch(()=>({}));
     throw new Error(err?.error?.message || `API error ${res.status}`);
   }
   const data = await res.json();
   return data.choices?.[0]?.message?.content || '';
 }
 
-// Section loader
-function loadSection(section) {
+// ── Section Loader ────────────────────────────────────────────
+function loadSection(section, forceRefresh) {
   const panel = document.getElementById('contentPanel');
   const titles = { words:'Words of the Day', quote:'Quote of the Day', phrases:'Phrases to Learn', idiom:'Idiom of the Day' };
+
+  // Check daily cache
+  if (!forceRefresh) {
+    const cached = getCached(section);
+    if (cached) {
+      renderSection(section, panel, cached, true);
+      return;
+    }
+  }
+
   panel.innerHTML = `
     <div class="panel-header">
       <div class="panel-title">${titles[section]}</div>
-      <button class="refresh-btn" onclick="reloadSection('${section}')">↻ Refresh</button>
+      <div class="btn-row"><span class="fresh-badge">⟳ Fetching new…</span></div>
     </div>
-    <div class="loading">
-      <div class="spinner"></div>
-      <div class="loading-text">Fetching from Groq AI…</div>
-    </div>`;
+    <div class="loading"><div class="spinner"></div><div class="loading-text">Asking Groq AI…</div></div>`;
+
   switch(section) {
-    case 'words':   loadWords(panel); break;
-    case 'quote':   loadQuote(panel); break;
-    case 'phrases': loadPhrases(panel); break;
-    case 'idiom':   loadIdiom(panel); break;
+    case 'words':   fetchWords(panel, section); break;
+    case 'quote':   fetchQuote(panel, section); break;
+    case 'phrases': fetchPhrases(panel, section); break;
+    case 'idiom':   fetchIdiom(panel, section); break;
   }
 }
 
-function reloadSection(section) { activeSection = null; activate(section); }
+function renderSection(section, panel, data, fromCache) {
+  const titles = { words:'Words of the Day', quote:'Quote of the Day', phrases:'Phrases to Learn', idiom:'Idiom of the Day' };
+  const badge = fromCache
+    ? `<span class="cached-badge">✓ Today's content</span>`
+    : `<span class="fresh-badge">✨ Just fetched</span>`;
+  const forceBtn = `<button class="refresh-btn force" onclick="loadSection('${section}',true)" title="Get different content">↻ New set</button>`;
+  const header = `<div class="panel-header"><div class="panel-title">${titles[section]}</div><div class="btn-row">${badge}${forceBtn}</div></div>`;
 
-// WORDS
-async function loadWords(panel) {
-  const prompt = `Give me 5 interesting English vocabulary words for daily learning. For each word provide:
-- word
-- pos (part of speech)
-- pronunciation (phonetic, e.g. "ep-i-TOM-ee")
-- meaning (1-2 sentence definition)
-- sentences (array of exactly 3 example sentences)
-
-Respond ONLY with valid JSON, no markdown, no extra text:
-{"words":[{"word":"...","pos":"...","pronunciation":"...","meaning":"...","sentences":["...","...","..."]}]}`;
-  try {
-    const raw = await callGroq(prompt);
-    const clean = raw.replace(/```json|```/g,'').trim();
-    const data = JSON.parse(clean);
-    const header = panel.querySelector('.panel-header').outerHTML;
-    panel.innerHTML = header + `<div class="word-grid">${data.words.map(w => `
-      <div class="word-card">
-        <div class="word-top"><span class="word-main">${w.word}</span><span class="word-pos">${w.pos}</span></div>
-        <div class="word-pronunciation">${w.pronunciation}</div>
-        <div class="word-meaning">${w.meaning}</div>
-        <div class="sentences-label">Example Sentences</div>
-        ${w.sentences.map(s=>`<div class="sentence-item">${s}</div>`).join('')}
-      </div>`).join('')}</div>`;
-    panel.querySelector('.refresh-btn').onclick = () => reloadSection('words');
-  } catch(e) { showError(panel, e.message, 'words'); }
+  switch(section) {
+    case 'words':   renderWords(panel, header, data); break;
+    case 'quote':   renderQuote(panel, header, data); break;
+    case 'phrases': renderPhrases(panel, header, data); break;
+    case 'idiom':   renderIdiom(panel, header, data); break;
+  }
 }
 
-// QUOTE
-async function loadQuote(panel) {
-  const prompt = `Give me one powerful, lesser-known inspirational quote. Provide:
-- quote: the exact text
-- author: who said it
-- context: 1-2 sentences about its meaning or background
+// ── WORDS ─────────────────────────────────────────────────────
+async function fetchWords(panel, section) {
+  const prompt = `Give me 5 interesting, advanced English vocabulary words that are genuinely useful for expanding one's vocabulary. These should be real dictionary words (NOT idioms or phrases).
+
+For each word provide:
+- word: the word itself
+- pos: part of speech (noun/verb/adjective/adverb)
+- pronunciation: phonetic syllable breakdown e.g. "ep-i-TOM-ee" or "MEL-i-floo-us"
+- meaning: clear definition in 1-2 sentences
+- sentences: array of exactly 3 natural example sentences
+
+Respond ONLY with valid JSON, absolutely no markdown or extra text:
+{"words":[{"word":"","pos":"","pronunciation":"","meaning":"","sentences":["","",""]}]}`;
+  try {
+    const raw = await callGroq(prompt);
+    const data = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    setCache(section, data);
+    renderSection(section, panel, data, false);
+  } catch(e) { showError(panel, e.message, section); }
+}
+
+function renderWords(panel, header, data) {
+  panel.innerHTML = header + `<div class="word-grid">${data.words.map(w=>`
+    <div class="word-card">
+      <div class="word-top"><span class="word-main">${w.word}</span><span class="word-pos">${w.pos}</span></div>
+      <div class="word-pronunciation">${w.pronunciation}</div>
+      <div class="word-meaning">${w.meaning}</div>
+      <div class="sentences-label">Example Sentences</div>
+      ${w.sentences.map(s=>`<div class="sentence-item">${s}</div>`).join('')}
+    </div>`).join('')}</div>`;
+}
+
+// ── QUOTE ─────────────────────────────────────────────────────
+async function fetchQuote(panel, section) {
+  const prompt = `Give me one powerful, thought-provoking quote from a notable person. Choose something lesser-known and genuinely insightful — not the most famous overused quotes.
+
+Provide:
+- quote: the exact quote text
+- author: full name of who said/wrote it
+- context: 2 sentences explaining its meaning or the circumstances in which it was said
 
 Respond ONLY with valid JSON, no markdown:
-{"quote":"...","author":"...","context":"..."}`;
+{"quote":"","author":"","context":""}`;
   try {
     const raw = await callGroq(prompt);
-    const clean = raw.replace(/```json|```/g,'').trim();
-    const d = JSON.parse(clean);
-    const header = panel.querySelector('.panel-header').outerHTML;
-    panel.innerHTML = header + `
-      <div class="quote-card">
-        <div class="quote-mark">"</div>
-        <div class="quote-text">${d.quote}</div>
-        <div class="quote-divider"></div>
-        <div class="quote-author">— ${d.author}</div>
-        ${d.context ? `<p style="margin-top:20px;font-size:0.88rem;color:var(--muted);line-height:1.65;font-style:italic;">${d.context}</p>` : ''}
-      </div>`;
-    panel.querySelector('.refresh-btn').onclick = () => reloadSection('quote');
-  } catch(e) { showError(panel, e.message, 'quote'); }
+    const data = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    setCache(section, data);
+    renderSection(section, panel, data, false);
+  } catch(e) { showError(panel, e.message, section); }
 }
 
-// PHRASES
-async function loadPhrases(panel) {
-  const prompt = `Give me 5 useful English phrases or expressions for daily learning. For each:
-- phrase: the phrase
-- meaning: what it means
-- example: one natural example sentence
+function renderQuote(panel, header, d) {
+  panel.innerHTML = header + `
+    <div class="quote-card">
+      <div class="quote-mark">"</div>
+      <div class="quote-text">${d.quote}</div>
+      <div class="quote-divider"></div>
+      <div class="quote-author">— ${d.author}</div>
+      ${d.context?`<p style="margin-top:20px;font-size:0.88rem;color:var(--muted);line-height:1.65;font-style:italic;">${d.context}</p>`:''}
+    </div>`;
+}
+
+// ── PHRASES ───────────────────────────────────────────────────
+async function fetchPhrases(panel, section) {
+  const prompt = `Give me 5 useful English phrases for daily learning. These must be PHRASES ONLY — collocations, common expressions, or phrasal constructions. Do NOT include idioms (idioms are figurative expressions like "break a leg" — avoid those entirely here).
+
+Good examples of phrases: "take something for granted", "in the long run", "on the other hand", "make a point of", "keep in mind"
+
+For each phrase provide:
+- phrase: the phrase itself
+- type: one of "collocation", "expression", "phrasal verb", or "fixed phrase"
+- meaning: what it means in plain English
+- example: one natural sentence using it in context
 
 Respond ONLY with valid JSON, no markdown:
-{"phrases":[{"phrase":"...","meaning":"...","example":"..."}]}`;
+{"phrases":[{"phrase":"","type":"","meaning":"","example":""}]}`;
   try {
     const raw = await callGroq(prompt);
-    const clean = raw.replace(/```json|```/g,'').trim();
-    const data = JSON.parse(clean);
-    const header = panel.querySelector('.panel-header').outerHTML;
-    panel.innerHTML = header + `<div class="word-grid">${data.phrases.map(p => `
-      <div class="phrase-card">
-        <div class="phrase-title">${p.phrase}</div>
-        <div class="phrase-meaning">${p.meaning}</div>
-        <div class="phrase-example">${p.example}</div>
-      </div>`).join('')}</div>`;
-    panel.querySelector('.refresh-btn').onclick = () => reloadSection('phrases');
-  } catch(e) { showError(panel, e.message, 'phrases'); }
+    const data = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    setCache(section, data);
+    renderSection(section, panel, data, false);
+  } catch(e) { showError(panel, e.message, section); }
 }
 
-// IDIOM
-async function loadIdiom(panel) {
-  const prompt = `Give me one interesting English idiom of the day. Provide:
-- idiom: the idiom
-- meaning: what it means literally and figuratively
-- origin: 2-3 sentences about its history
-- examples: array of exactly 3 sentences using it naturally
+function renderPhrases(panel, header, data) {
+  const typeClass = { 'collocation':'collocation','expression':'expression','phrasal verb':'phrasal','fixed phrase':'phrasal','idiom':'idiom' };
+  panel.innerHTML = header + `<div class="word-grid">${data.phrases.map((p,i)=>`
+    <div class="phrase-card">
+      <div>
+        <span class="phrase-type ${typeClass[p.type?.toLowerCase()]||'expression'}">${p.type||'phrase'}</span>
+      </div>
+      <div class="phrase-title">${p.phrase}</div>
+      <div class="phrase-meaning">${p.meaning}</div>
+      <div class="phrase-example">${p.example}</div>
+    </div>`).join('')}</div>`;
+}
+
+// ── IDIOM ─────────────────────────────────────────────────────
+async function fetchIdiom(panel, section) {
+  const prompt = `Give me one interesting English idiom of the day. An idiom is a figurative expression whose meaning cannot be understood from the literal words (e.g., "bite the bullet", "the ball is in your court").
+
+Provide:
+- idiom: the idiom phrase
+- meaning: what it figuratively means (do NOT give the literal meaning)
+- origin: 2-3 sentences about its interesting historical or cultural origin
+- examples: array of exactly 3 natural sentences using the idiom in different contexts
 
 Respond ONLY with valid JSON, no markdown:
-{"idiom":"...","meaning":"...","origin":"...","examples":["...","...","..."]}`;
+{"idiom":"","meaning":"","origin":"","examples":["","",""]}`;
   try {
     const raw = await callGroq(prompt);
-    const clean = raw.replace(/```json|```/g,'').trim();
-    const d = JSON.parse(clean);
-    const header = panel.querySelector('.panel-header').outerHTML;
-    panel.innerHTML = header + `
-      <div class="idiom-card">
-        <div class="idiom-tag">Idiom of the Day</div>
-        <div class="idiom-phrase">"${d.idiom}"</div>
-        <div class="idiom-meaning">${d.meaning}</div>
-        ${d.origin ? `<div class="idiom-origin"><strong style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);">Origin</strong><br>${d.origin}</div>` : ''}
-        <div class="sentences-label">Usage in Sentences</div>
-        <div class="idiom-examples">${d.examples.map(s=>`<div class="sentence-item">${s}</div>`).join('')}</div>
-      </div>`;
-    panel.querySelector('.refresh-btn').onclick = () => reloadSection('idiom');
-  } catch(e) { showError(panel, e.message, 'idiom'); }
+    const data = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    setCache(section, data);
+    renderSection(section, panel, data, false);
+  } catch(e) { showError(panel, e.message, section); }
 }
 
+function renderIdiom(panel, header, d) {
+  panel.innerHTML = header + `
+    <div class="idiom-card">
+      <div class="idiom-tag">Idiom of the Day</div>
+      <div class="idiom-phrase">"${d.idiom}"</div>
+      <div class="idiom-meaning">${d.meaning}</div>
+      ${d.origin?`<div class="idiom-origin"><strong style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);">Origin</strong><br>${d.origin}</div>`:''}
+      <div class="sentences-label">Usage in Sentences</div>
+      <div class="idiom-examples">${d.examples.map(s=>`<div class="sentence-item">${s}</div>`).join('')}</div>
+    </div>`;
+}
+
+// ── Error ─────────────────────────────────────────────────────
 function showError(panel, msg, section) {
-  const header = panel.querySelector('.panel-header')?.outerHTML || '';
-  panel.innerHTML = header + `<div class="error-box">⚠️ ${msg}</div>`;
-  if (header) panel.querySelector('.refresh-btn').onclick = () => reloadSection(section);
+  const titles = { words:'Words of the Day', quote:'Quote of the Day', phrases:'Phrases to Learn', idiom:'Idiom of the Day' };
+  panel.innerHTML = `
+    <div class="panel-header">
+      <div class="panel-title">${titles[section]||''}</div>
+      <div class="btn-row"><button class="refresh-btn" onclick="loadSection('${section}',true)">↻ Try again</button></div>
+    </div>
+    <div class="error-box">⚠️ ${msg}</div>`;
 }
 </script>
 </body>
