@@ -3,407 +3,613 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WordWise — Daily Language Learning</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Lexica — Daily Language Learning</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
     --ink: #1a1208;
-    --cream: #faf6ee;
-    --warm: #f5ede0;
-    --gold: #c8922a;
-    --gold-light: #e8b84b;
-    --sage: #5a7a5c;
-    --card-bg: #fffdf8;
+    --paper: #f5f0e8;
+    --cream: #ede8dc;
+    --gold: #c8973a;
+    --gold-light: #e8c878;
+    --rust: #b85c38;
+    --sage: #5a7a5a;
+    --muted: #8a7f6e;
+    --border: #d4cfc4;
+    --card-bg: #faf7f2;
     --shadow: rgba(26,18,8,0.12);
   }
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; overflow-x: hidden; }
 
-  header { text-align: center; padding: 3rem 1.5rem 2rem; }
-  .header-eyebrow { font-size: 0.7rem; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.75rem; }
-  h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 8vw, 5rem); font-weight: 900; line-height: 1; color: var(--ink); }
-  h1 span { color: var(--gold); font-style: italic; }
-  .header-sub { font-size: 0.95rem; color: #7a6a55; margin-top: 0.75rem; font-weight: 300; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .api-setup { max-width: 520px; margin: 1rem auto 2rem; padding: 1.5rem; background: var(--card-bg); border: 1.5px solid #e8dcc8; border-radius: 16px; box-shadow: 0 4px 24px var(--shadow); }
-  .api-setup h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 0.4rem; }
-  .api-setup p { font-size: 0.82rem; color: #8a7a65; margin-bottom: 0.9rem; line-height: 1.5; }
-  .api-setup p a { color: var(--gold); font-weight: 600; }
-  .api-input-row { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
-  .api-input-row input { flex: 1; padding: 0.7rem 1rem; border: 1.5px solid #e0d4bc; border-radius: 10px; font-family: monospace; font-size: 0.78rem; background: var(--cream); color: var(--ink); outline: none; min-width: 0; }
-  .api-input-row input:focus { border-color: var(--gold); }
-  .btn-save { padding: 0.7rem 1.2rem; background: var(--gold); color: white; border: none; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; white-space: nowrap; }
-  .btn-test { width: 100%; padding: 0.65rem; background: var(--warm); border: 1.5px solid #e0d4bc; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; color: #6a4a20; margin-bottom: 0.5rem; }
-  #apiStatus { font-size: 0.8rem; padding: 0.7rem 0.9rem; border-radius: 8px; line-height: 1.55; word-break: break-word; display: none; }
-  #apiStatus.ok  { background: #eefff2; color: #2a6a3a; font-weight: 600; display: block; }
-  #apiStatus.err { background: #fff0f0; color: #c03030; display: block; }
-  #apiStatus.info{ background: #fff8ee; color: #7a4a10; display: block; }
-
-  .nav-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; padding: 0 1rem 2rem; max-width: 700px; margin: 0 auto; }
-  .nav-btn { display: flex; flex-direction: column; align-items: center; gap: 0.35rem; padding: 1.1rem 1.5rem; background: var(--card-bg); border: 1.5px solid #e8dcc8; border-radius: 16px; cursor: pointer; transition: all 0.25s cubic-bezier(0.34,1.56,0.64,1); box-shadow: 0 2px 12px var(--shadow); min-width: 120px; font-family: 'DM Sans', sans-serif; text-align: center; }
-  .nav-btn:hover { transform: translateY(-4px) scale(1.04); box-shadow: 0 8px 28px var(--shadow); }
-  .nav-btn:active { transform: scale(0.97); }
-  .nav-btn.active { border-color: var(--gold); box-shadow: 0 6px 24px rgba(200,146,42,0.25); }
-  .nav-icon { font-size: 1.8rem; }
-  .nav-label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink); }
-  .nav-sub { font-size: 0.68rem; color: #9a8a75; }
-
-  .content-area { max-width: 720px; margin: 0 auto 4rem; padding: 0 1rem; }
-  .placeholder { text-align: center; padding: 4rem 2rem; color: #b0a090; }
-  .placeholder .ph-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.5; }
-  .placeholder p { font-size: 0.95rem; font-style: italic; }
-
-  .loading { text-align: center; padding: 3rem; }
-  .loader { display: inline-block; width: 40px; height: 40px; border: 3px solid #e8dcc8; border-top-color: var(--gold); border-radius: 50%; animation: spin 0.8s linear infinite; margin-bottom: 1rem; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loading p { color: #9a8a75; font-style: italic; font-size: 0.9rem; }
-
-  .card { background: var(--card-bg); border: 1.5px solid #e8dcc8; border-radius: 20px; padding: 1.75rem; margin-bottom: 1rem; box-shadow: 0 4px 20px var(--shadow); animation: slideUp 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
-  @keyframes slideUp { from { opacity:0; transform: translateY(20px) scale(0.97); } to { opacity:1; transform: translateY(0) scale(1); } }
-  .card:nth-child(2){animation-delay:.08s} .card:nth-child(3){animation-delay:.16s} .card:nth-child(4){animation-delay:.24s} .card:nth-child(5){animation-delay:.32s}
-
-  .word-header { display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.75rem; margin-bottom: 0.5rem; }
-  .word-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--ink); }
-  .word-pos { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: white; background: var(--gold); padding: 0.2rem 0.6rem; border-radius: 99px; }
-  .word-number { font-size: 0.75rem; color: #c0b09a; font-weight: 500; margin-left: auto; }
-  .pronunciation { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.9rem; padding: 0.6rem 0.9rem; background: var(--warm); border-radius: 10px; border-left: 3px solid var(--gold); }
-  .pron-text { font-size: 0.88rem; color: #6a5a45; font-style: italic; flex: 1; }
-  .definition { font-size: 0.95rem; color: #4a3a2a; line-height: 1.65; margin-bottom: 1rem; }
-  .section-label { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.5rem; }
-  .example { padding: 0.6rem 0.9rem; border-left: 2px solid #e0d4bc; margin-bottom: 0.45rem; font-size: 0.88rem; color: #5a4a38; line-height: 1.55; font-style: italic; }
-
-  .quote-card { background: linear-gradient(135deg, #1a2a4a, #2d4570); border: none; color: white; }
-  .quote-marks { font-family: 'Playfair Display', serif; font-size: 5rem; color: rgba(255,255,255,0.15); line-height: 0.8; margin-bottom: -1.2rem; }
-  .quote-text { font-family: 'Playfair Display', serif; font-size: clamp(1.1rem,3vw,1.4rem); font-style: italic; line-height: 1.6; color: rgba(255,255,255,0.95); margin-bottom: 1.25rem; }
-  .quote-author { font-size: 0.82rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--gold-light); }
-  .quote-meaning { margin-top: 1rem; padding: 0.85rem; background: rgba(255,255,255,0.08); border-radius: 10px; font-size: 0.85rem; color: rgba(255,255,255,0.75); line-height: 1.55; }
-
-  .phrase-title { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: var(--sage); margin-bottom: 0.35rem; }
-  .phrase-meaning { font-size: 0.88rem; color: #4a5a4a; margin-bottom: 0.75rem; line-height: 1.55; }
-
-  .idiom-banner { background: linear-gradient(135deg, #4a1a1a, #7a2a1a); margin: -1.75rem -1.75rem 1.25rem; padding: 1.25rem 1.75rem; border-radius: 18px 18px 0 0; }
-  .idiom-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: white; }
-  .idiom-origin { font-size: 0.82rem; color: #8a6a55; margin-bottom: 0.75rem; padding: 0.5rem 0.8rem; background: var(--warm); border-radius: 8px; line-height: 1.5; }
-
-  .error-card { background: #fff5f5; border-color: #f5c0c0; padding: 2rem; animation: slideUp 0.3s ease both; }
-  .error-icon { font-size: 2rem; margin-bottom: 0.5rem; text-align:center; }
-  .error-msg { font-size: 0.88rem; color: #c04040; line-height: 1.6; word-break: break-word; }
-
-  .section-header { text-align: center; margin-bottom: 1.5rem; animation: slideUp 0.35s ease both; }
-  .section-header h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; }
-  .section-header p { font-size: 0.82rem; color: #9a8a75; margin-top: 0.25rem; }
-  .ornament { text-align: center; font-size: 1.2rem; color: #c8b89a; margin: 0.5rem 0 1.5rem; letter-spacing: 0.5rem; }
-
-  .change-key-btn { background: none; border: none; font-size: 0.75rem; color: #b0a090; cursor: pointer; text-decoration: underline; font-family: 'DM Sans', sans-serif; display: block; margin: 0 auto 2rem; }
-
-  @media (max-width: 480px) {
-    .nav-btn { min-width: calc(50% - 0.375rem); flex: 1; }
-    .card { padding: 1.25rem; }
-    .idiom-banner { margin: -1.25rem -1.25rem 1rem; padding: 1rem 1.25rem; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
   }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  header {
+    text-align: center;
+    padding: 52px 0 36px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 44px;
+    position: relative;
+  }
+
+  header::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background: var(--gold);
+  }
+
+  .brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.2rem;
+    font-weight: 900;
+    letter-spacing: -1px;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  .brand span { color: var(--gold); font-style: italic; }
+
+  .tagline {
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-top: 10px;
+    font-weight: 500;
+  }
+
+  .date-strip {
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-bottom: 40px;
+    letter-spacing: 0.1em;
+  }
+
+  /* API Section */
+  .api-section {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 14px;
+  }
+
+  .api-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .api-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--muted);
+    white-space: nowrap;
+    min-width: 80px;
+  }
+
+  .provider-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #e8f5e9;
+    color: var(--sage);
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid #c8e6c9;
+    white-space: nowrap;
+  }
+
+  .api-section input {
+    flex: 1;
+    min-width: 180px;
+    padding: 9px 14px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--paper);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.82rem;
+    color: var(--ink);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .api-section input:focus { border-color: var(--gold); }
+
+  .api-save-btn {
+    padding: 9px 20px;
+    background: var(--gold);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    white-space: nowrap;
+  }
+
+  .api-save-btn:hover { background: #b8832a; }
+  .api-save-btn:active { transform: scale(0.97); }
+
+  .api-status { font-size: 0.78rem; padding: 3px 10px; border-radius: 20px; font-weight: 500; }
+  .api-status.ok { background: #e8f5e9; color: var(--sage); }
+  .api-status.missing { background: #fff3e0; color: var(--rust); }
+
+  .api-hint {
+    margin-top: 10px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .api-hint a { color: var(--gold); text-decoration: none; font-weight: 500; }
+  .api-hint a:hover { text-decoration: underline; }
+
+  /* Nav */
+  .nav-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 44px;
+  }
+
+  @media (min-width: 580px) { .nav-grid { grid-template-columns: repeat(4, 1fr); } }
+
+  .nav-tile {
+    background: var(--card-bg);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s, background 0.2s;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .nav-tile::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transition: transform 0.25s;
+    transform-origin: left;
+  }
+
+  .nav-tile:hover { border-color: var(--gold); transform: translateY(-3px); box-shadow: 0 8px 24px var(--shadow); }
+  .nav-tile:hover::before { transform: scaleX(1); }
+  .nav-tile.active { border-color: var(--gold); background: #fdf9f0; box-shadow: 0 6px 20px var(--shadow); }
+  .nav-tile.active::before { transform: scaleX(1); }
+
+  .tile-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+  .tile-label { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; color: var(--ink); }
+  .tile-sub { font-size: 0.72rem; color: var(--muted); margin-top: 4px; letter-spacing: 0.04em; }
+
+  /* Content */
+  .content-panel { min-height: 320px; }
+
+  .panel-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .panel-title { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--ink); }
+
+  .refresh-btn {
+    background: none;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 7px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    color: var(--muted);
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+  }
+
+  .refresh-btn:hover { border-color: var(--gold); color: var(--gold); }
+
+  .loading { text-align: center; padding: 60px 20px; }
+  .spinner { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.9s linear infinite; margin: 0 auto 16px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--muted); letter-spacing: 0.1em; }
+
+  .empty-state { text-align: center; padding: 70px 20px; color: var(--muted); }
+  .empty-icon { font-size: 3rem; margin-bottom: 14px; opacity: 0.5; }
+  .empty-text { font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.1rem; }
+
+  .word-grid { display: grid; gap: 16px; }
+
+  .word-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 28px;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .word-card:nth-child(2) { animation-delay: 0.07s; }
+  .word-card:nth-child(3) { animation-delay: 0.14s; }
+  .word-card:nth-child(4) { animation-delay: 0.21s; }
+  .word-card:nth-child(5) { animation-delay: 0.28s; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+
+  .word-top { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
+  .word-main { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; color: var(--ink); }
+  .word-pos { font-size: 0.72rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold); border: 1px solid var(--gold-light); padding: 2px 9px; border-radius: 20px; background: #fdf9f0; }
+  .word-pronunciation { font-family: 'DM Mono', monospace; font-size: 0.88rem; color: var(--rust); margin-bottom: 10px; letter-spacing: 0.02em; }
+  .word-pronunciation::before { content: '/ '; }
+  .word-pronunciation::after { content: ' /'; }
+  .word-meaning { font-size: 0.95rem; color: #3a3020; line-height: 1.6; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px dashed var(--border); }
+  .sentences-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--muted); font-weight: 500; margin-bottom: 8px; }
+  .sentence-item { font-size: 0.88rem; color: #4a4030; line-height: 1.65; padding: 6px 0 6px 16px; border-left: 2px solid var(--gold-light); margin-bottom: 6px; }
+
+  .quote-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 40px 44px;
+    text-align: center;
+    animation: fadeUp 0.4s ease both;
+    position: relative;
+  }
+
+  .quote-mark { font-family: 'Playfair Display', serif; font-size: 6rem; color: var(--gold-light); line-height: 0.6; position: absolute; top: 28px; left: 32px; opacity: 0.6; }
+  .quote-text { font-family: 'Playfair Display', serif; font-size: 1.45rem; font-style: italic; line-height: 1.65; color: var(--ink); margin-bottom: 24px; position: relative; z-index: 1; }
+  .quote-author { font-size: 0.82rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.18em; color: var(--gold); }
+  .quote-divider { width: 36px; height: 2px; background: var(--gold); margin: 0 auto 12px; }
+
+  .phrase-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px 26px;
+    animation: fadeUp 0.4s ease both;
+    display: grid;
+    gap: 8px;
+  }
+
+  .phrase-card:nth-child(2) { animation-delay: 0.07s; }
+  .phrase-card:nth-child(3) { animation-delay: 0.14s; }
+  .phrase-card:nth-child(4) { animation-delay: 0.21s; }
+  .phrase-card:nth-child(5) { animation-delay: 0.28s; }
+
+  .phrase-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; font-weight: 700; color: var(--ink); }
+  .phrase-meaning { font-size: 0.88rem; color: #3a3020; line-height: 1.6; }
+  .phrase-example { font-size: 0.85rem; color: var(--muted); font-style: italic; padding-left: 14px; border-left: 2px solid var(--sage); margin-top: 2px; }
+
+  .idiom-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 32px 36px;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  .idiom-tag { display: inline-block; font-size: 0.7rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.14em; color: var(--sage); border: 1px solid var(--sage); padding: 2px 10px; border-radius: 20px; margin-bottom: 14px; }
+  .idiom-phrase { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 900; font-style: italic; color: var(--ink); margin-bottom: 14px; line-height: 1.3; }
+  .idiom-meaning { font-size: 0.95rem; line-height: 1.65; color: #3a3020; margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px dashed var(--border); }
+  .idiom-origin { font-size: 0.82rem; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+  .idiom-examples { display: grid; gap: 8px; }
+
+  .error-box {
+    background: #fff5f5;
+    border: 1px solid #fca5a5;
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 0.88rem;
+    color: var(--rust);
+    animation: fadeUp 0.3s ease;
+    line-height: 1.6;
+  }
+
+  footer { text-align: center; margin-top: 60px; padding-top: 28px; border-top: 1px solid var(--border); font-size: 0.75rem; color: var(--muted); letter-spacing: 0.06em; }
+  footer strong { font-family: 'Playfair Display', serif; font-style: italic; color: var(--gold); font-size: 0.85rem; }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="header-eyebrow">✦ Daily Language Learning ✦</div>
-  <h1>Word<span>Wise</span></h1>
-  <p class="header-sub">Expand your vocabulary, one beautiful word at a time.</p>
-</header>
+<div class="container">
+  <header>
+    <div class="brand">Lexi<span>ca</span></div>
+    <div class="tagline">Your Daily Language Companion</div>
+  </header>
 
-<div class="api-setup" id="apiSetup">
-  <h3>🔑 Enter your Gemini API Key</h3>
-  <p>Get a free key at <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a> → click <strong>"Create API key"</strong>.</p>
-  <div class="api-input-row">
-    <input type="text" id="apiKeyInput" placeholder="Paste full API key here"
-      autocomplete="off" autocorrect="off" autocapitalize="none" spellcheck="false" />
-    <button class="btn-save" onclick="saveKey()">Save</button>
+  <div class="date-strip" id="dateStrip"></div>
+
+  <!-- API Key -->
+  <div class="api-section">
+    <div class="api-row">
+      <span class="api-label">API Key</span>
+      <span class="provider-badge">⚡ Groq (Free)</span>
+      <input type="password" id="apiKeyInput" placeholder="gsk_..." autocomplete="off">
+      <button class="api-save-btn" onclick="saveApiKey()">Save Key</button>
+      <span class="api-status" id="apiStatus">—</span>
+    </div>
+    <div class="api-hint">
+      Get a free key at <a href="https://console.groq.com" target="_blank">console.groq.com</a> → Sign up → API Keys → Create API Key &nbsp;|&nbsp; Key starts with <code>gsk_</code> &nbsp;|&nbsp; Free tier: 14,400 requests/day
+    </div>
   </div>
-  <button class="btn-test" onclick="testKey()">🧪 Test API Key</button>
-  <div id="apiStatus"></div>
-</div>
 
-<div class="nav-grid">
-  <button class="nav-btn words"   onclick="fetch5Words()"><span class="nav-icon">📖</span><span class="nav-label">Words</span><span class="nav-sub">5 words of the day</span></button>
-  <button class="nav-btn quotes"  onclick="fetchQuote()"><span class="nav-icon">💬</span><span class="nav-label">Quote</span><span class="nav-sub">Thought for the day</span></button>
-  <button class="nav-btn phrases" onclick="fetch5Phrases()"><span class="nav-icon">🗣️</span><span class="nav-label">Phrases</span><span class="nav-sub">5 phrases to learn</span></button>
-  <button class="nav-btn idioms"  onclick="fetchIdiom()"><span class="nav-icon">🌿</span><span class="nav-label">Idiom</span><span class="nav-sub">Idiom of the day</span></button>
-</div>
-
-<div class="content-area" id="contentArea">
-  <div class="placeholder">
-    <div class="ph-icon">✨</div>
-    <p>Tap a button above to begin your daily learning</p>
+  <!-- Nav Tiles -->
+  <div class="nav-grid">
+    <div class="nav-tile" id="tile-words" onclick="activate('words')">
+      <span class="tile-icon">📖</span>
+      <div class="tile-label">Words</div>
+      <div class="tile-sub">5 words of the day</div>
+    </div>
+    <div class="nav-tile" id="tile-quote" onclick="activate('quote')">
+      <span class="tile-icon">✍️</span>
+      <div class="tile-label">Quote</div>
+      <div class="tile-sub">Quote of the day</div>
+    </div>
+    <div class="nav-tile" id="tile-phrases" onclick="activate('phrases')">
+      <span class="tile-icon">💬</span>
+      <div class="tile-label">Phrases</div>
+      <div class="tile-sub">5 phrases to learn</div>
+    </div>
+    <div class="nav-tile" id="tile-idiom" onclick="activate('idiom')">
+      <span class="tile-icon">🎭</span>
+      <div class="tile-label">Idiom</div>
+      <div class="tile-sub">Idiom of the day</div>
+    </div>
   </div>
-</div>
 
-<button class="change-key-btn" onclick="changeKey()">🔑 Change API Key</button>
+  <!-- Content Panel -->
+  <div class="content-panel" id="contentPanel">
+    <div class="empty-state">
+      <div class="empty-icon">🌿</div>
+      <div class="empty-text">Choose a category above to begin your daily learning</div>
+    </div>
+  </div>
+
+  <footer>
+    <strong>Lexica</strong> &nbsp;·&nbsp; Powered by Groq AI (Llama 3) &nbsp;·&nbsp; Expand your vocabulary every day
+  </footer>
+</div>
 
 <script>
-const STORAGE_KEY = 'wordwise_gemini_key_v2';
-let currentKey = '';
+// Date
+const now = new Date();
+document.getElementById('dateStrip').textContent =
+  now.toLocaleDateString('en-IN', { weekday:'long', year:'numeric', month:'long', day:'numeric' }).toUpperCase();
 
-// ── The direct Gemini endpoint — works from GitHub Pages ──
-// We call it directly; modern browsers allow this as Gemini has CORS headers.
-// If direct fails, we try via a public CORS proxy.
-const GEMINI_MODEL = 'gemini-2.0-flash';
-const DIRECT_URL   = (key) => `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${key}`;
-const PROXY_URL    = (key) => `https://corsproxy.io/?url=${encodeURIComponent(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${key}`)}`;
+// API Key
+let API_KEY = localStorage.getItem('lexica_groq_key') || '';
+const apiInput = document.getElementById('apiKeyInput');
+const apiStatus = document.getElementById('apiStatus');
 
-// ── KEY MANAGEMENT ──
-function saveKey() {
-  const val = document.getElementById('apiKeyInput').value.trim();
-  if (!val) { showStatus('Please paste your API key first.', 'err'); return; }
-  currentKey = val;
-  localStorage.setItem(STORAGE_KEY, val);
-  showStatus('✅ Saved! Now tap "Test API Key" to verify.', 'ok');
+if (API_KEY) { apiInput.value = API_KEY; setStatus('ok'); } else { setStatus('missing'); }
+
+function setStatus(s) {
+  if (s === 'ok') { apiStatus.textContent = '✓ Key saved'; apiStatus.className = 'api-status ok'; }
+  else { apiStatus.textContent = 'No key'; apiStatus.className = 'api-status missing'; }
 }
 
-function loadKey() {
-  const k = localStorage.getItem(STORAGE_KEY);
-  if (k) { currentKey = k; document.getElementById('apiSetup').style.display = 'none'; }
+function saveApiKey() {
+  const val = apiInput.value.trim();
+  if (!val) { apiStatus.textContent = 'Enter a key'; apiStatus.className = 'api-status missing'; return; }
+  API_KEY = val;
+  localStorage.setItem('lexica_groq_key', val);
+  setStatus('ok');
 }
 
-function getKey() {
-  if (!currentKey) {
-    document.getElementById('apiSetup').style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return null;
-  }
-  return currentKey;
+// State
+let activeSection = null;
+
+function activate(section) {
+  document.querySelectorAll('.nav-tile').forEach(t => t.classList.remove('active'));
+  document.getElementById('tile-' + section).classList.add('active');
+  if (activeSection === section) return;
+  activeSection = section;
+  loadSection(section);
 }
 
-function changeKey() {
-  currentKey = '';
-  localStorage.removeItem(STORAGE_KEY);
-  document.getElementById('apiKeyInput').value = '';
-  const s = document.getElementById('apiStatus');
-  s.className = ''; s.style.display = 'none';
-  document.getElementById('apiSetup').style.display = 'block';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function showStatus(msg, type) {
-  const el = document.getElementById('apiStatus');
-  el.innerHTML = msg;
-  el.className = type;
-}
-
-// ── CORE FETCH ──
-async function geminiPost(url, body) {
-  const res = await fetch(url, {
+// Groq API call (OpenAI-compatible, uses Llama 3.3 70B)
+async function callGroq(prompt) {
+  if (!API_KEY) throw new Error('Please enter your Groq API key above and click Save Key.');
+  const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${API_KEY}`
+    },
+    body: JSON.stringify({
+      model: 'llama-3.3-70b-versatile',
+      messages: [{ role: 'user', content: prompt }],
+      temperature: 0.85,
+      max_tokens: 2048
+    })
   });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err?.error?.message || `API error ${res.status}`);
+  }
   const data = await res.json();
-  if (!res.ok) throw { status: res.status, message: data?.error?.message || `HTTP ${res.status}` };
-  return data;
+  return data.choices?.[0]?.message?.content || '';
 }
 
-async function callGemini(prompt) {
-  const key = getKey();
-  if (!key) throw new Error('NO_KEY');
-
-  const body = {
-    contents: [{ parts: [{ text: prompt }] }],
-    generationConfig: { temperature: 0.9, maxOutputTokens: 1800 }
-  };
-
-  // 1. Try direct first
-  try {
-    const data = await geminiPost(DIRECT_URL(key), body);
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    if (text) return text;
-  } catch (e) {
-    // If auth error — no point retrying
-    if (e.status === 400 || e.status === 401 || e.status === 403) {
-      throw new Error('API key rejected: ' + e.message);
-    }
-    // Otherwise fall through to proxy
-  }
-
-  // 2. Try via CORS proxy
-  try {
-    const data = await geminiPost(PROXY_URL(key), body);
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    if (text) return text;
-  } catch (e) {
-    if (e.status === 400 || e.status === 401 || e.status === 403) {
-      throw new Error('API key rejected: ' + e.message);
-    }
-    throw new Error('Connection failed via both direct and proxy. ' + e.message);
-  }
-
-  throw new Error('No response from Gemini.');
-}
-
-// ── TEST KEY ──
-async function testKey() {
-  const val = document.getElementById('apiKeyInput').value.trim() || currentKey;
-  if (!val) { showStatus('Paste your API key above first.', 'err'); return; }
-  showStatus('⏳ Testing… please wait (up to 10 seconds)…', 'info');
-
-  const body = {
-    contents: [{ parts: [{ text: 'Reply with the single word: WORKING' }] }],
-    generationConfig: { maxOutputTokens: 10 }
-  };
-
-  // Try direct
-  try {
-    const data = await geminiPost(DIRECT_URL(val), body);
-    if (data.candidates) {
-      currentKey = val;
-      localStorage.setItem(STORAGE_KEY, val);
-      showStatus('✅ Key works! (direct connection) — tap Save if you haven\'t, then use the app!', 'ok');
-      return;
-    }
-  } catch (e) {
-    if (e.status === 400 || e.status === 401 || e.status === 403) {
-      showStatus(`❌ Key rejected by Google: "${e.message}"<br><br>Please create a <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--gold)">new API key here</a>.`, 'err');
-      return;
-    }
-    // fall through to proxy
-  }
-
-  // Try proxy
-  try {
-    const data = await geminiPost(PROXY_URL(val), body);
-    if (data.candidates) {
-      currentKey = val;
-      localStorage.setItem(STORAGE_KEY, val);
-      showStatus('✅ Key works! (via proxy) — tap Save then use the app!', 'ok');
-      return;
-    }
-  } catch (e) {
-    if (e.status === 400 || e.status === 401 || e.status === 403) {
-      showStatus(`❌ Key rejected by Google: "${e.message}"<br><br>Please create a <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color:var(--gold)">new API key here</a>.`, 'err');
-      return;
-    }
-    showStatus(`❌ Both direct and proxy failed: ${e.message}<br><br>Make sure your internet is on and try again.`, 'err');
-    return;
-  }
-
-  showStatus('❌ Unknown error. Please try again.', 'err');
-}
-
-// ── HELPERS ──
-function setActive(type) {
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  ({ words:0, quote:1, phrases:2, idiom:3 });
-  const map = { words:0, quote:1, phrases:2, idiom:3 };
-  document.querySelectorAll('.nav-btn')[map[type]].classList.add('active');
-}
-function showLoading(msg) {
-  document.getElementById('contentArea').innerHTML = `<div class="loading"><div class="loader"></div><p>${msg}</p></div>`;
-}
-function showError(msg) {
-  document.getElementById('contentArea').innerHTML = `<div class="card error-card"><div class="error-icon">⚠️</div><div class="error-msg">${msg}</div></div>`;
-}
-function parseJSON(text) {
-  text = text.replace(/```json/gi,'').replace(/```/g,'').trim();
-  const m = text.match(/\[[\s\S]*\]|\{[\s\S]*\}/);
-  if (m) return JSON.parse(m[0]);
-  throw new Error('Could not parse AI response');
-}
-
-// ── 5 WORDS ──
-async function fetch5Words() {
-  setActive('words');
-  showLoading('Discovering beautiful words for you…');
-  const prompt = `Give me 5 interesting English vocabulary words. Return ONLY a raw JSON array, no markdown, no explanation:
-[{"word":"Ephemeral","part_of_speech":"adjective","pronunciation":"ih-FEM-er-ul","pronunciation_tip":"Stress the FEM syllable","definition":"Lasting for a very short time.","examples":["The ephemeral beauty of cherry blossoms is precious.","Social trends are often ephemeral.","She chased ephemeral dreams."]}]
-Exactly 5 items. Raw JSON only.`;
-  try {
-    renderWords(parseJSON(await callGemini(prompt)));
-  } catch(e) {
-    if (e.message==='NO_KEY') return;
-    showError(`Error: ${e.message}<br><br><small>Tap "Change API Key" below and test your key again.</small>`);
-  }
-}
-function renderWords(words) {
-  const a = document.getElementById('contentArea');
-  a.innerHTML = `<div class="section-header"><h2>5 Words of the Day</h2><p>Learn, pronounce, and use them confidently</p></div><div class="ornament">· · ✦ · ·</div>`;
-  words.forEach((w,i) => {
-    const c = document.createElement('div'); c.className='card'; c.style.animationDelay=`${i*.09}s`;
-    c.innerHTML=`<div class="word-header"><span class="word-title">${w.word}</span><span class="word-pos">${w.part_of_speech||'word'}</span><span class="word-number">${i+1}/5</span></div>
-    <div class="pronunciation"><span>🔊</span><span class="pron-text"><strong>${w.pronunciation}</strong>${w.pronunciation_tip?' — '+w.pronunciation_tip:''}</span></div>
-    <div class="definition">${w.definition}</div>
-    <div class="section-label">Example Sentences</div>
-    ${(w.examples||[]).map(ex=>`<div class="example">"${ex}"</div>`).join('')}`;
-    a.appendChild(c);
-  });
-}
-
-// ── QUOTE ──
-async function fetchQuote() {
-  setActive('quote');
-  showLoading('Finding today\'s perfect quote…');
-  const prompt = `Give me an inspiring quote of the day. Return ONLY raw JSON, no markdown:
-{"quote":"The quote text.","author":"Author Name","meaning":"2-3 sentences on meaning and application."}`;
-  try { renderQuote(parseJSON(await callGemini(prompt))); }
-  catch(e) { if(e.message==='NO_KEY')return; showError(`Error: ${e.message}`); }
-}
-function renderQuote(q) {
-  document.getElementById('contentArea').innerHTML=`
-    <div class="section-header"><h2>Quote of the Day</h2><p>A thought to carry with you</p></div>
-    <div class="ornament">· · ✦ · ·</div>
-    <div class="card quote-card">
-      <div class="quote-marks">"</div>
-      <div class="quote-text">${q.quote}</div>
-      <div class="quote-author">— ${q.author}</div>
-      <div class="quote-meaning">💡 ${q.meaning}</div>
+// Section loader
+function loadSection(section) {
+  const panel = document.getElementById('contentPanel');
+  const titles = { words:'Words of the Day', quote:'Quote of the Day', phrases:'Phrases to Learn', idiom:'Idiom of the Day' };
+  panel.innerHTML = `
+    <div class="panel-header">
+      <div class="panel-title">${titles[section]}</div>
+      <button class="refresh-btn" onclick="reloadSection('${section}')">↻ Refresh</button>
+    </div>
+    <div class="loading">
+      <div class="spinner"></div>
+      <div class="loading-text">Fetching from Groq AI…</div>
     </div>`;
+  switch(section) {
+    case 'words':   loadWords(panel); break;
+    case 'quote':   loadQuote(panel); break;
+    case 'phrases': loadPhrases(panel); break;
+    case 'idiom':   loadIdiom(panel); break;
+  }
 }
 
-// ── 5 PHRASES ──
-async function fetch5Phrases() {
-  setActive('phrases');
-  showLoading('Curating powerful phrases for you…');
-  const prompt = `Give me 5 useful English phrases. Return ONLY raw JSON array, no markdown:
-[{"phrase":"Break the ice","type":"Social expression","meaning":"To relieve tension or start conversation.","examples":["He told a joke to break the ice.","A compliment can break the ice."],"tip":"Use in unfamiliar social settings."}]
-Exactly 5 items. Raw JSON only.`;
-  try { renderPhrases(parseJSON(await callGemini(prompt))); }
-  catch(e) { if(e.message==='NO_KEY')return; showError(`Error: ${e.message}`); }
-}
-function renderPhrases(phrases) {
-  const a = document.getElementById('contentArea');
-  a.innerHTML=`<div class="section-header"><h2>5 Phrases to Learn</h2><p>Speak more naturally and confidently</p></div><div class="ornament">· · ✦ · ·</div>`;
-  phrases.forEach((p,i)=>{
-    const c=document.createElement('div'); c.className='card'; c.style.animationDelay=`${i*.09}s`;
-    c.innerHTML=`<div class="word-header"><span class="phrase-title">${p.phrase}</span><span class="word-pos" style="background:var(--sage)">${p.type||'phrase'}</span><span class="word-number">${i+1}/5</span></div>
-    <div class="phrase-meaning">${p.meaning}</div>
-    <div class="section-label">In Context</div>
-    ${(p.examples||[]).map(ex=>`<div class="example">"${ex}"</div>`).join('')}
-    ${p.tip?`<div style="margin-top:.75rem;padding:.6rem .9rem;background:#f0f8f1;border-radius:8px;font-size:.82rem;color:#4a6a4a;">💡 <strong>Tip:</strong> ${p.tip}</div>`:''}`;
-    a.appendChild(c);
-  });
+function reloadSection(section) { activeSection = null; activate(section); }
+
+// WORDS
+async function loadWords(panel) {
+  const prompt = `Give me 5 interesting English vocabulary words for daily learning. For each word provide:
+- word
+- pos (part of speech)
+- pronunciation (phonetic, e.g. "ep-i-TOM-ee")
+- meaning (1-2 sentence definition)
+- sentences (array of exactly 3 example sentences)
+
+Respond ONLY with valid JSON, no markdown, no extra text:
+{"words":[{"word":"...","pos":"...","pronunciation":"...","meaning":"...","sentences":["...","...","..."]}]}`;
+  try {
+    const raw = await callGroq(prompt);
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const data = JSON.parse(clean);
+    const header = panel.querySelector('.panel-header').outerHTML;
+    panel.innerHTML = header + `<div class="word-grid">${data.words.map(w => `
+      <div class="word-card">
+        <div class="word-top"><span class="word-main">${w.word}</span><span class="word-pos">${w.pos}</span></div>
+        <div class="word-pronunciation">${w.pronunciation}</div>
+        <div class="word-meaning">${w.meaning}</div>
+        <div class="sentences-label">Example Sentences</div>
+        ${w.sentences.map(s=>`<div class="sentence-item">${s}</div>`).join('')}
+      </div>`).join('')}</div>`;
+    panel.querySelector('.refresh-btn').onclick = () => reloadSection('words');
+  } catch(e) { showError(panel, e.message, 'words'); }
 }
 
-// ── IDIOM ──
-async function fetchIdiom() {
-  setActive('idiom');
-  showLoading('Unearthing today\'s idiom…');
-  const prompt = `Give me an interesting English idiom of the day. Return ONLY raw JSON, no markdown:
-{"idiom":"Once in a blue moon","meaning":"Something that happens very rarely.","origin":"Brief history.","examples":["I only see my cousin once in a blue moon.","We get snow here once in a blue moon.","He smiles once in a blue moon."],"usage_tip":"When to use this idiom."}`;
-  try { renderIdiom(parseJSON(await callGemini(prompt))); }
-  catch(e) { if(e.message==='NO_KEY')return; showError(`Error: ${e.message}`); }
-}
-function renderIdiom(d) {
-  document.getElementById('contentArea').innerHTML=`
-    <div class="section-header"><h2>Idiom of the Day</h2><p>Master the language people actually speak</p></div>
-    <div class="ornament">· · ✦ · ·</div>
-    <div class="card">
-      <div class="idiom-banner"><div class="section-label" style="color:rgba(255,255,255,.6)">🌿 Today's Idiom</div><div class="idiom-title">${d.idiom}</div></div>
-      <div class="definition" style="margin-bottom:.9rem"><strong>Meaning:</strong> ${d.meaning}</div>
-      ${d.origin?`<div class="idiom-origin">📜 <strong>Origin:</strong> ${d.origin}</div>`:''}
-      <div class="section-label" style="margin-top:.75rem">Example Sentences</div>
-      ${(d.examples||[]).map(ex=>`<div class="example">"${ex}"</div>`).join('')}
-      ${d.usage_tip?`<div style="margin-top:.75rem;padding:.7rem .9rem;background:#fff8ee;border-radius:8px;font-size:.83rem;color:#6a4a20;border-left:3px solid var(--gold);">💡 <strong>When to use it:</strong> ${d.usage_tip}</div>`:''}
-    </div>`;
+// QUOTE
+async function loadQuote(panel) {
+  const prompt = `Give me one powerful, lesser-known inspirational quote. Provide:
+- quote: the exact text
+- author: who said it
+- context: 1-2 sentences about its meaning or background
+
+Respond ONLY with valid JSON, no markdown:
+{"quote":"...","author":"...","context":"..."}`;
+  try {
+    const raw = await callGroq(prompt);
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const d = JSON.parse(clean);
+    const header = panel.querySelector('.panel-header').outerHTML;
+    panel.innerHTML = header + `
+      <div class="quote-card">
+        <div class="quote-mark">"</div>
+        <div class="quote-text">${d.quote}</div>
+        <div class="quote-divider"></div>
+        <div class="quote-author">— ${d.author}</div>
+        ${d.context ? `<p style="margin-top:20px;font-size:0.88rem;color:var(--muted);line-height:1.65;font-style:italic;">${d.context}</p>` : ''}
+      </div>`;
+    panel.querySelector('.refresh-btn').onclick = () => reloadSection('quote');
+  } catch(e) { showError(panel, e.message, 'quote'); }
 }
 
-loadKey();
+// PHRASES
+async function loadPhrases(panel) {
+  const prompt = `Give me 5 useful English phrases or expressions for daily learning. For each:
+- phrase: the phrase
+- meaning: what it means
+- example: one natural example sentence
+
+Respond ONLY with valid JSON, no markdown:
+{"phrases":[{"phrase":"...","meaning":"...","example":"..."}]}`;
+  try {
+    const raw = await callGroq(prompt);
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const data = JSON.parse(clean);
+    const header = panel.querySelector('.panel-header').outerHTML;
+    panel.innerHTML = header + `<div class="word-grid">${data.phrases.map(p => `
+      <div class="phrase-card">
+        <div class="phrase-title">${p.phrase}</div>
+        <div class="phrase-meaning">${p.meaning}</div>
+        <div class="phrase-example">${p.example}</div>
+      </div>`).join('')}</div>`;
+    panel.querySelector('.refresh-btn').onclick = () => reloadSection('phrases');
+  } catch(e) { showError(panel, e.message, 'phrases'); }
+}
+
+// IDIOM
+async function loadIdiom(panel) {
+  const prompt = `Give me one interesting English idiom of the day. Provide:
+- idiom: the idiom
+- meaning: what it means literally and figuratively
+- origin: 2-3 sentences about its history
+- examples: array of exactly 3 sentences using it naturally
+
+Respond ONLY with valid JSON, no markdown:
+{"idiom":"...","meaning":"...","origin":"...","examples":["...","...","..."]}`;
+  try {
+    const raw = await callGroq(prompt);
+    const clean = raw.replace(/```json|```/g,'').trim();
+    const d = JSON.parse(clean);
+    const header = panel.querySelector('.panel-header').outerHTML;
+    panel.innerHTML = header + `
+      <div class="idiom-card">
+        <div class="idiom-tag">Idiom of the Day</div>
+        <div class="idiom-phrase">"${d.idiom}"</div>
+        <div class="idiom-meaning">${d.meaning}</div>
+        ${d.origin ? `<div class="idiom-origin"><strong style="font-size:0.72rem;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted);">Origin</strong><br>${d.origin}</div>` : ''}
+        <div class="sentences-label">Usage in Sentences</div>
+        <div class="idiom-examples">${d.examples.map(s=>`<div class="sentence-item">${s}</div>`).join('')}</div>
+      </div>`;
+    panel.querySelector('.refresh-btn').onclick = () => reloadSection('idiom');
+  } catch(e) { showError(panel, e.message, 'idiom'); }
+}
+
+function showError(panel, msg, section) {
+  const header = panel.querySelector('.panel-header')?.outerHTML || '';
+  panel.innerHTML = header + `<div class="error-box">⚠️ ${msg}</div>`;
+  if (header) panel.querySelector('.refresh-btn').onclick = () => reloadSection(section);
+}
 </script>
 </body>
 </html>
