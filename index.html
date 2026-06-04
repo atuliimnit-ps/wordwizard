@@ -196,6 +196,17 @@ function saveApiKey() {
   API_KEY = val; localStorage.setItem('lexica_groq_key', val); setStatus('ok');
 }
 
+// ── Seen List (avoids repeating shown items on New Set) ──────
+function getSeenList(section) {
+  try { const r = localStorage.getItem('lexica_seen_' + section); return r ? JSON.parse(r) : []; }
+  catch { return []; }
+}
+function addToSeenList(section, items) {
+  const seen = getSeenList(section);
+  const merged = [...new Set([...seen, ...items])].slice(-100);
+  localStorage.setItem('lexica_seen_' + section, JSON.stringify(merged));
+}
+
 // ── Daily Cache ───────────────────────────────────────────────
 // Keys: lexica_cache_<section>_<date>
 function getCached(section) {
@@ -290,7 +301,11 @@ function renderSection(section, panel, data, fromCache) {
 
 // ── WORDS ─────────────────────────────────────────────────────
 async function fetchWords(panel, section) {
-  const prompt = `Give me 5 interesting, advanced English vocabulary words that are genuinely useful for expanding one's vocabulary. These should be real dictionary words (NOT idioms or phrases).
+  const seen = getSeenList(section);
+  const excludeLine = seen.length > 0
+    ? `\nIMPORTANT: Do NOT include any of these words that have already been shown: ${seen.join(', ')}. Give completely different words.`
+    : '';
+  const prompt = `Give me 5 interesting, advanced English vocabulary words that are genuinely useful for expanding one's vocabulary. These should be real dictionary words (NOT idioms or phrases).${excludeLine}
 
 For each word provide:
 - word: the word itself
@@ -304,6 +319,7 @@ Respond ONLY with valid JSON, absolutely no markdown or extra text:
   try {
     const raw = await callGroq(prompt);
     const data = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    addToSeenList(section, data.words.map(w => w.word.toLowerCase()));
     setCache(section, data);
     renderSection(section, panel, data, false);
   } catch(e) { showError(panel, e.message, section); }
@@ -322,7 +338,11 @@ function renderWords(panel, header, data) {
 
 // ── QUOTE ─────────────────────────────────────────────────────
 async function fetchQuote(panel, section) {
-  const prompt = `Give me one powerful, thought-provoking quote from a notable person. Choose something lesser-known and genuinely insightful — not the most famous overused quotes.
+  const seen = getSeenList(section);
+  const excludeLine = seen.length > 0
+    ? `\nIMPORTANT: Do NOT use quotes from these authors already shown: ${seen.join(', ')}. Pick someone different.`
+    : '';
+  const prompt = `Give me one powerful, thought-provoking quote from a notable person. Choose something lesser-known and genuinely insightful — not the most famous overused quotes.${excludeLine}
 
 Provide:
 - quote: the exact quote text
@@ -334,6 +354,7 @@ Respond ONLY with valid JSON, no markdown:
   try {
     const raw = await callGroq(prompt);
     const data = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    addToSeenList(section, [data.author.toLowerCase()]);
     setCache(section, data);
     renderSection(section, panel, data, false);
   } catch(e) { showError(panel, e.message, section); }
@@ -352,7 +373,11 @@ function renderQuote(panel, header, d) {
 
 // ── PHRASES ───────────────────────────────────────────────────
 async function fetchPhrases(panel, section) {
-  const prompt = `Give me 5 useful English phrases for daily learning. These must be PHRASES ONLY — collocations, common expressions, or phrasal constructions. Do NOT include idioms (idioms are figurative expressions like "break a leg" — avoid those entirely here).
+  const seen = getSeenList(section);
+  const excludeLine = seen.length > 0
+    ? `\nIMPORTANT: Do NOT include any of these phrases already shown: ${seen.join(', ')}. Give completely different ones.`
+    : '';
+  const prompt = `Give me 5 useful English phrases for daily learning. These must be PHRASES ONLY — collocations, common expressions, or phrasal constructions. Do NOT include idioms (idioms are figurative expressions like "break a leg" — avoid those entirely here).${excludeLine}
 
 Good examples of phrases: "take something for granted", "in the long run", "on the other hand", "make a point of", "keep in mind"
 
@@ -367,6 +392,7 @@ Respond ONLY with valid JSON, no markdown:
   try {
     const raw = await callGroq(prompt);
     const data = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    addToSeenList(section, data.phrases.map(p => p.phrase.toLowerCase()));
     setCache(section, data);
     renderSection(section, panel, data, false);
   } catch(e) { showError(panel, e.message, section); }
@@ -387,7 +413,11 @@ function renderPhrases(panel, header, data) {
 
 // ── IDIOM ─────────────────────────────────────────────────────
 async function fetchIdiom(panel, section) {
-  const prompt = `Give me one interesting English idiom of the day. An idiom is a figurative expression whose meaning cannot be understood from the literal words (e.g., "bite the bullet", "the ball is in your court").
+  const seen = getSeenList(section);
+  const excludeLine = seen.length > 0
+    ? `\nIMPORTANT: Do NOT use any of these idioms already shown: ${seen.join(', ')}. Give a completely different one.`
+    : '';
+  const prompt = `Give me one interesting English idiom of the day. An idiom is a figurative expression whose meaning cannot be understood from the literal words (e.g., "bite the bullet", "the ball is in your court").${excludeLine}
 
 Provide:
 - idiom: the idiom phrase
@@ -400,6 +430,7 @@ Respond ONLY with valid JSON, no markdown:
   try {
     const raw = await callGroq(prompt);
     const data = JSON.parse(raw.replace(/```json|```/g,'').trim());
+    addToSeenList(section, [data.idiom.toLowerCase()]);
     setCache(section, data);
     renderSection(section, panel, data, false);
   } catch(e) { showError(panel, e.message, section); }
